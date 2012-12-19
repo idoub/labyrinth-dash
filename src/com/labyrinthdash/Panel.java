@@ -312,20 +312,29 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				
 				if((touchY > ((sen.surfaceHeight/100)*62)) && (touchY < (((sen.surfaceHeight/100)*62)+(sen.surfaceHeight/10))) )
 				{
-					sen.vibrate = true;
-					multiplayDialog.show();
+					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
+					{
+						sen.vibrate = true;
+						multiplayDialog.show();
+					}
 				}
 				
 				if((touchY > ((sen.surfaceHeight/100)*74)) && (touchY < (((sen.surfaceHeight/100)*74)+(sen.surfaceHeight/10))) )
 				{
-					sen.vibrate = true;
-					helpDialog.show();
+					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
+					{
+						sen.vibrate = true;
+						helpDialog.show();
+					}
 				}
 	
 				if((touchY > ((sen.surfaceHeight/100)*86)) && (touchY < (((sen.surfaceHeight/100)*86)+(sen.surfaceHeight/10))) )
 				{
-					sen.vibrate = true;
-					infoDialog.show();
+					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
+					{
+						sen.vibrate = true;
+						infoDialog.show();
+					}
 				}	
 			}
 			else if(stage == 4)
@@ -349,10 +358,18 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				previousStage = 4;
 			}
 			
+			if(stage == 5)
+			{
+				if((touchX < (sen.surfaceWidth/8)) && (touchY < (sen.surfaceWidth/8)))
+				{
+					stage = 4;
+					sen.vibrate = true;
+				}
+			}
+			
 			previousX = touchX;
 			previousY = touchY;
 		}
-		
 		
 		// Let the ScaleGestureDetector inspect all events.
 		if(zoom){
@@ -415,6 +432,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		canvas.save();
 		
+		// Intial start screen
 		if(stage == 0)
 		{
 			if(logoX > (sen.surfaceWidth/12))
@@ -433,6 +451,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
 		}
 		
+		// Transition from start screen to main menu
+		// Timing is computed in mainThread async thread
 		if(stage == 1)
 		{
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
@@ -468,6 +488,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
 		}		
 		
+		// Main menu
 		if(stage == 2)
 		{						
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);	
@@ -478,9 +499,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpAbout, buttonX, ((sen.surfaceHeight/100)*86), myPaint);
 		}
 		
+		// Transition from main menu to single player menu
+		// Changing of bitmap position computed in mainTask async thread 
 		if(stage == 3)
 		{			
-			// Do transition, then goto stage 4 or 2
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
 			
 			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
@@ -494,10 +516,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLevel3, levelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
 			canvas.drawBitmap(bmpLevel4, levelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
 			canvas.drawBitmap(bmpLevel5, levelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
-			
 			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
 		}
 		
+		// Choose single player level
 		if(stage == 4)
 		{
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
@@ -511,6 +533,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
 		}
 		
+		// Draw menu boundary platforms 
 		if((stage == 2) || (stage == 3) || (stage == 4))
 		{
 			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
@@ -534,6 +557,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			}
 		}
 		
+		
+		// Game play
 		if(stage == 5)
 		{
 			// Zooming in or out
@@ -547,6 +572,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				}
 			}
 			canvas.drawBitmap(player.img, (float)(player.position.x - player.img.getWidth()*0.5), (float)(player.position.y - player.img.getHeight()*0.5), myPaint);
+		
+			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
 		}		
 		
 		canvas.restore();
