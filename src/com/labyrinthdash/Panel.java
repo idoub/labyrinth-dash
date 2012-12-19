@@ -564,7 +564,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		if(scaleImages == true)
 		{			
-			bmpBackground = BitmapFactory.decodeResource(getResources(),R.drawable.spaceblack);
+			bmpBackground = BitmapFactory.decodeResource(getResources(),R.drawable.space);
 			bmpSingle = BitmapFactory.decodeResource(getResources(), R.drawable.single_button);
 			bmpMulti = BitmapFactory.decodeResource(getResources(), R.drawable.multi_button);
 			bmpBorder = BitmapFactory.decodeResource(getResources(), R.drawable.metalplatform);
