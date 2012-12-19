@@ -35,8 +35,6 @@ public class Game extends Activity implements AccelerometerListener
     int duration = 0;
     Vibrator v;
 	
-	//private static final String TAG = "Labyrinth";
-	
 	//Location
 	LocationManager locationManager;
 	Location location;
@@ -46,8 +44,7 @@ public class Game extends Activity implements AccelerometerListener
 	//Menu stuffs
 	AlertDialog.Builder chooseName;
 	AlertDialog.Builder choosePlayer;
-	
-    //@SuppressWarnings("deprecation")
+
 	@Override
     public void onCreate(Bundle savedInstanceState) 
     {
@@ -138,9 +135,6 @@ public class Game extends Activity implements AccelerometerListener
         {
         	locationPos = "Location fail";
         }
-        
-        //Toast toast = Toast.makeText(CONTEXT, locationPos, Toast.LENGTH_SHORT);
-        //toast.show();
         
         
         // Name input

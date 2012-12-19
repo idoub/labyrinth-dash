@@ -2,13 +2,25 @@ package com.labyrinthdash;
 
 import android.util.Log;
 
-//Creates and holds all the cells that make up the map
+/**
+ * Creates and holds all the cells that make up the map
+ * 
+ * @author Isaac Doub
+ */
 public class GameMap {
+	/** 2D array defining the cells in the map */
 	public static GameCell[][] Map;
+	/** Cell the player starts in */
 	public static GameCell startCell;
+	/** How many cells horizontally */
 	private static int columns = 20;
+	/** How many cells vertically */
 	private static int rows = 20;
 	
+	/**
+	 * Creates the game map. Goes through the 2D array filling it with blank
+	 * cells, then replaces certain blank cells with specified platforms.
+	 */
 	public GameMap() {
 		Map = new GameCell[columns][rows];
 
@@ -45,6 +57,11 @@ public class GameMap {
 		Log.i("INFO", "New map created");
 	}
 	
+	/**
+	 * Finds and returns a cell in which the provided point lies.
+	 * @param position screen position a cell will cover
+	 * @return GameCell in which the point provided lies
+	 */
 	public static GameCell getCellContaining(Vector2D position) {
 		GameCell tmpCell = Map[0][0];
 		int x = (int)position.x/tmpCell.width;
@@ -52,6 +69,13 @@ public class GameMap {
 		return Map[x][y];
 	}
 	
+	/**
+	 * Finds and returns an array of cells containing and surrounding the
+	 * position provided. This is used to limit the number of cells the player
+	 * calls collision on.
+	 * @param position
+	 * @return Array of GameCell surrounding the position provided
+	 */
 	public static GameCell[] getCellsInProximity(Vector2D position) {
 		GameCell tmpCell = Map[0][0];
 		int x = (int)position.x/tmpCell.width;

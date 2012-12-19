@@ -34,7 +34,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	private static final String TAG = "Labyrinth";
 
 	// Threads
-	AsyncTask appTask;
+	AsyncTask<Void,Void,Void> appTask;
 	boolean runMainTask = true;
 	boolean jumping = false;
 	
@@ -360,7 +360,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		{
 			surfaceThread.finish();
 			surfaceThread = null;
-			System.runFinalizersOnExit(true);
+			//System.runFinalizersOnExit(true);
 			//System.exit(0);
 		}
 		

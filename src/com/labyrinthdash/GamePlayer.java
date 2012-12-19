@@ -4,16 +4,33 @@ import com.labyrinthdash.R;
 
 import android.graphics.Bitmap;
 
+/**
+ * GamePlayer is the sphere which the player will be controlling.
+ * 
+ * @author Isaac Doub
+ */
 public class GamePlayer extends GameObject 
 {
+	/** Velocity of the player */
 	Vector2D velocity;
+	/** Position of the player in next frame if the current velocity is added */
 	Vector2D nextPosition;
+	/** Position of player at last collision */
 	Vector2D lastCollision;
-	double radius;
+	/** Time of last collision as a percentage of time in between frames */
 	double timeOfCollision;
+	/** Radius of the sphere representing the player */
+	double radius;
+	/** Cell the player is currently in */
 	GameCell currentCell;
+	/** Cell the player was in in the last frame */
 	GameCell lastCell = currentCell;
 	
+	/**
+	 * Creates the player by calling the parent constructor of GameObject and
+	 * then setting the other values to default.
+	 * @param png
+	 */
 	public GamePlayer(int png) {
 		super(png);
 		velocity = new Vector2D();
@@ -23,27 +40,43 @@ public class GamePlayer extends GameObject
 		timeOfCollision = Double.MAX_VALUE;
 	}
 	
-	// For multiplayer
+	/** X position setter */
 	public void setX(float x)
 	{
 		this.position.x = x;
 	}
 	
+	/** Y position setter */
 	public void setY(float y)
 	{
 		this.position.y = y;
 	}
 	
+	/** X position getter */
 	public double getX()
 	{
 		return this.position.x;
 	}
 	
+	/** Y position getter */
 	public double getY()
 	{
 		return this.position.y;
 	}
 	
+	/**
+	 * Handles the movement of the player each frame.
+	 * <p>
+	 * Starts by getting the current acceleration from the accelerometer in the
+	 * phone and then adding that to the velocity. Then calculates what the
+	 * next position of the player would be at the new velocity and calls
+	 * checkCollision(). Finally checks whether the player is in a cell it can
+	 * fall through and if so falls; otherwise it adds the velocity to the
+	 * position.
+	 * 
+	 * @param accelX
+	 * @param accelY
+	 */
 	public void move(float accelX, float accelY) {
 		Vector2D acceleration = new Vector2D(accelX, accelY);
     	
@@ -62,6 +95,11 @@ public class GamePlayer extends GameObject
     	else position = position.add(velocity);
 	}
 	
+	/**
+	 * Iteratively scales the bitmap to simulate falling animation until the
+	 * image is 5 pixels, then resets the players position to the last good cell
+	 * it was on.
+	 */
 	private void fall() {
 		// TODO: Animate fall, then reset
 		if(img.getHeight() > 5) {
@@ -73,6 +111,19 @@ public class GamePlayer extends GameObject
 		}
 	}
 	
+	/**
+	 * Checks whether the player has collided with anything and adjusts it's
+	 * position and velocity accordingly.
+	 * <p>
+	 * It starts by looping through the cells that are surrounding the current
+	 * cell and for each cell calling the cell's hasCollided() method. If there
+	 * is a collision, the position and time of the collision are recorded by
+	 * segmentCollision() and the loop is broken.
+	 * <p>
+	 * The method then calculates the reaction vector using the point of
+	 * collision before resetting values. It also uses separate checks for
+	 * collision with the edge of the screen.
+	 */
 	private void checkCollision() {
 		boolean hasCollided = false;
 		for(GameCell cell : GameMap.getCellsInProximity(nextPosition)) {

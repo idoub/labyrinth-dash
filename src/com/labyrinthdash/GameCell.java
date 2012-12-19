@@ -1,28 +1,67 @@
 package com.labyrinthdash;
 
+/**
+ * GameCell is the parent class for all map cells in the game. It's primary
+ * purpose is to provide structure to it's children classes and to provide a
+ * universal segment collision function for the children to use. All but one of
+ * the global variables in this class are solely used in segmentCollision to
+ * minimize the creation of variables for each iteration of the function.
+ * 
+ * @author Isaac Doub
+ */
 public abstract class GameCell extends GameObject {
+	/** Current segment that will be tested for collision. */
 	private Vector2D seg;
+	/** Velocity of the player */
 	private Vector2D vel;
+	/** Normal to the segment */
 	private Vector2D normal;
-	
+	/** Distance from player to segment in current frame. */
 	private double D1;
+	/** Distance from player to segment in next frame. */
 	private double D2;
+	/** Time of collision. */
 	private double t;
-	
+	/** Position of player at time of collision. */
 	private Vector2D collisionPosition;
+	/** Point of intersection between player and segment. */
 	private Vector2D intersectionPoint;
 	
+	/** Whether the player can fall through this cell or not. */
 	protected boolean space = true;
 	
+	/**
+	 * GameCell constructor. Takes the cell image and creates a GameObject with
+	 * the image.
+	 * 
+	 * @param png An integer reference to the image.
+	 */
 	public GameCell(int png) {
 		// Call the GameObject constructor so the image is created.
 		super(png);
 	}
 	
+	/**
+	 * Returns a string representing the position of the cell.
+	 */
 	public String toString() {
 		return position.toString();
 	}
 	
+	/**
+	 * Calculates whether the player will collide with a segment in between
+	 * this frame and the next.
+	 * <p>
+	 * This class is quite complicated and uses a lot of vector trigonometry in
+	 * it's calculations. It's core functionality is based on Seb Lee-Delisle's
+	 * post at http://seb.ly/2010/01/predicting-circle-line-collisions/ with a
+	 * lot of modifications to make it work and to optimize it.
+	 * 
+	 * @param P1 First segment point
+	 * @param P2 Second segment point
+	 * @param player GamePlayer to check collision with
+	 * @return true if it collided, false if it didn't
+	 */
 	protected boolean segmentCollision(Vector2D P1, Vector2D P2, GamePlayer player) {
 		// Prepare variables that will be used commonly.
 		seg = P2.sub(P1);
@@ -74,6 +113,14 @@ public abstract class GameCell extends GameObject {
 		}
 	}
 	
+	/**
+	 * Abstract class to force standard collision method. Each cell should
+	 * cycle through it's segments, using segmentCollision() to check for
+	 * collision and modifying the player's velocity accordingly.
+	 * 
+	 * @param player
+	 * @return true if collided, false if didn't
+	 */
 	/* 
 	 * Each cell should cycle through it's segments, using segmentCollision()
 	 * to check for collision and modifying the player's velocity accordingly
@@ -81,66 +128,72 @@ public abstract class GameCell extends GameObject {
 	protected abstract boolean hasCollided(GamePlayer player);
 }
 
+/**
+ * EmptyCell is simply the default/background cell that gets tiled across each
+ * map and then replaced by the platform cells.
+ * 
+ * @author Isaac Doub
+ */
 class EmptyCell extends GameCell {
+	/**
+	 * Calls the parent constructor with a reference from R.drawable for the
+	 * image.
+	 */
 	public EmptyCell() {
 		super(R.drawable.spaceblack);
 	}
 	
+	/**
+	 * Creates a new cell with a provided X and Y position.
+	 * 
+	 * @param newX Desired X position of the cell.
+	 * @param newY Desired Y position of the cell.
+	 */
 	public EmptyCell(double newX, double newY) {
 		super(R.drawable.spaceblack);
 		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
 	}
 
+	/**
+	 * Protected function for checking collision. Always returns false as it's
+	 * the empty cell.
+	 * 
+	 * @return false
+	 */
 	@Override
 	protected boolean hasCollided(GamePlayer player) {
 		return false;
 	}
 }
 
-/*class CellWall_H extends GameCell {
-	Vector2D p1;
-	Vector2D p2;
-	
-	public CellWall_H(double newX, double newY) {
-		super(R.drawable.wall_h);
-		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-		p1 = new Vector2D(this.position.x, this.position.y + (this.img.getHeight() * 0.5));
-		p2 = new Vector2D(this.position.x + this.img.getWidth(), this.position.y + (this.img.getHeight() * 0.5));
-	}
-
-	@Override
-	protected boolean hasCollided(GamePlayer player) {
-		return this.segmentCollision(p1, p2, player);
-	}
-}*/
-
-/*class CellWall_V extends GameCell {
-	Vector2D p1;
-	Vector2D p2;
-	
-	public CellWall_V(double newX, double newY) {
-		super(R.drawable.wall_v);
-		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-		p1 = new Vector2D(this.position.x + (this.img.getWidth() * 0.5), this.position.y);
-		p2 = new Vector2D(this.position.x + (this.img.getWidth() * 0.5), this.position.y + this.img.getHeight());
-	}
-
-	@Override
-	protected boolean hasCollided(GamePlayer player) {
-		return  this.segmentCollision(p1, p2, player);
-	}
-}*/
-
+/**
+ * Platform is the default tile the player can navigate on.
+ * 
+ * @author Isaac Doub
+ */
 class Platform extends GameCell {
+	/**
+	 * Creates a new platform cell with the specified X and Y coordinates. The
+	 * default constructor requires X and Y coordinates so the platforms do not
+	 * pile up and mess up collisions.
+	 * 
+	 * @param newX
+	 * @param newY
+	 */
 	public Platform(double newX, double newY) {
 		super(R.drawable.metalplatform);
 		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
 		space = false;
 	}
 
+	/**
+	 * Protected function for checking collision. Always returns false as the
+	 * cell does not have any segments specified.
+	 * 
+	 * @return false
+	 */
 	@Override
 	protected boolean hasCollided(GamePlayer player) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 		
