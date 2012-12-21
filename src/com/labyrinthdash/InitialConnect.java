@@ -1,4 +1,4 @@
-package com.example.helloworld;
+package com.labyrinthdash;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
