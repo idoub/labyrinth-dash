@@ -3,6 +3,7 @@ package com.labyrinthdash;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +11,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -36,7 +38,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	// Threads
 	AsyncTask<Void,Void,Void> appTask;
 	boolean runMainTask = true;
-	boolean jumping = false;
 	
 	//Screen
 	int touchX, touchY = 0;
@@ -45,23 +46,19 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	
 	// Bitmaps
 	Bitmap bmpBackground;
-	Bitmap bmpMetal1;
-	Bitmap bmpMetal2;
-	Bitmap bmpLogo;
-	Bitmap bmpSingle;
-	Bitmap bmpMulti;
-	Bitmap bmpHelp;
-	Bitmap bmpAbout;	
-	Bitmap bmpBorder;	
-	Bitmap bmpOriginalLogo;
-	Bitmap bmpBackButton;
+	Bitmap bmpMetal1, bmpMetal2;
+	Bitmap bmpSingle, bmpMulti;
+	Bitmap bmpHelp, bmpAbout;
+	Bitmap bmpOriginalLogo, bmpLogo;
+	Bitmap bmpBackButtonLeft, bmpBorder;
 	
 	Bitmap bmpLevel1, bmpLevel2, bmpLevel3, bmpLevel4, bmpLevel5;
 	
 	boolean scaleImages = true;
 	boolean scaleInitialImages = true;
-	boolean loadImages = true;
 	boolean validPress = false;
+	boolean loadImages = true;
+	boolean showPlayerName = true;
 	Rect src;
 	Rect dst;
 	
@@ -72,7 +69,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	boolean initialMove = true;
 	
 	GamePlayer player;
-	String playerName = "Wally";
+	String playerName;
 	
 	//Zooming
 	private ScaleGestureDetector mScaleDetector;
@@ -81,7 +78,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	private static float MAX_ZOOM = 2f;
 	private int dm = 0;
 	private boolean zoom = true;
-	
 	
 	// Dialogs
 	private AlertDialog.Builder chooseNameDialog;
@@ -94,8 +90,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	{
 		super(context);
 		
-		player = p;
-		
+		player = p;		
 		_panel = this;
 		running = false;
 		getHolder().addCallback(this);
@@ -120,8 +115,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	    	 mScaleFactor = 1.5f;
 	    	 break;
 		}
-		//paint.setStyle(Paint.Style.FILL);
-		//paint.setColor(Color.GREEN);
 		
 		// Prepare Dialogs
 		multiplayDialog = new AlertDialog.Builder(getContext());
@@ -134,8 +127,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
           });
 		
 		helpDialog = new AlertDialog.Builder(getContext());
-		helpDialog.setTitle("Info");
-		helpDialog.setMessage("Help Section\n\nIf you need help for this game then you should consider not reproducing\n");
+		helpDialog.setTitle("Help");
+		helpDialog.setMessage("\nIf you need help for this game then you should consider not reproducing\n");
 		helpDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               // Canceled.
@@ -152,7 +145,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
           });
 		
 		chooseNameDialog = new AlertDialog.Builder(getContext());
-		chooseNameDialog.setTitle("Hey!");
+		chooseNameDialog.setTitle("Welcome!");
 		chooseNameDialog.setMessage("Put your name in the textbox:");
 		setOnTouchListener(new OnTouchListener()
 		{
@@ -200,9 +193,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		Log.d(TAG, "touchX: " + touchX);
 		Log.d(TAG, "touchY: " + touchY);
-		
-		//if(previousX  )
-		
+
+		// Check if 'valid' touch 
 		if((Math.abs(touchX-previousX) > 6) && (Math.abs(touchY-previousY) > 6))
 		{
 			Log.d(TAG, "Valid press");
@@ -226,7 +218,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		if(validPress == true)
 		{
-		
 			if(stage == 0)
 			{
 				//stage = 1;
@@ -238,27 +229,75 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				
 				if((touchY > (sen.surfaceHeight/2)) && (touchY < ((sen.surfaceHeight/2)+(sen.surfaceHeight/10))) )
 				{
+					// Check is there is a saved name in memory
+					 SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+					// Get the player name
+				    playerName = app_preferences.getString("playerName", "noName");
+				    
+				    // Player has never set name
+				    if(playerName.equals("noName"))
+				    {
+				    	nameChosen = false;
+				    }		
+				    // Player has saved a name
+				    else
+				    {
+				    	nameChosen = true;
+				    	
+				    	if(showPlayerName == true)
+				    	{
+				    		// Welcome player
+					    	Toast toast = Toast.makeText(getContext(), "Welcome back " + playerName, Toast.LENGTH_SHORT);
+	                      	toast.show();
+	                      	showPlayerName = false;
+				    	}
+				    }
+					
 					// If player hasn't picked a name
-					if(!nameChosen) {
+					if(!nameChosen) 
+					{
 		                final EditText input = new EditText(getContext());
 		                chooseNameDialog.setView(input);
-		                chooseNameDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-		                    public void onClick(DialogInterface dialog, int whichButton) {
-		                      String name = input.getText().toString();
-		                      // Do something with value!
-		                      	Toast toast = Toast.makeText(getContext(), "Player's name set to " + name, Toast.LENGTH_LONG);
-		                      	toast.show();
-		        				stage = 3;
-		        				previousStage = 2;
-		        				nameChosen = true;
+		                chooseNameDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() 
+		                {   
+		                	public void onClick(DialogInterface dialog, int whichButton) 
+		                    {
+		                        playerName = input.getText().toString();
+		                     
+		                        if(playerName.equals(""))
+		                        {
+		                        	// Player has no name :(
+			                      	Toast toast = Toast.makeText(getContext(), "No name entered", Toast.LENGTH_SHORT);
+			                      	toast.show();
+		                        }
+		                        else
+		                        {
+			                        // Welcome the player to the game
+			                      	Toast toast = Toast.makeText(getContext(), "Player's name set to " + playerName, Toast.LENGTH_SHORT);
+			                      	toast.show();
+			                      	
+			                      	// Save player name to the device memory
+			                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+			                      	SharedPreferences.Editor editor = app_preferences.edit();
+			                      	
+			                      	editor.putString("playerName", playerName);
+			                      	editor.commit();     	
+			                      	nameChosen = true;
+		                        }
+		                        stage = 3;
+			        			previousStage = 2;	
 		        				Log.d(TAG, "Moving to stage 3");		        				
 		                      }
-		                    });
-		                chooseNameDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		                    public void onClick(DialogInterface dialog, int whichButton) {
-		                      // Cancelled.
+		                });
+		                
+		                chooseNameDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
+		                {
+		                    public void onClick(DialogInterface dialog, int whichButton) 
+		                    {
+		                    	// Cancelled.
 		                    }
-		                  });
+		                });
 						chooseNameDialog.show();
 						sen.vibrate = true;
 					} 
@@ -273,20 +312,29 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				
 				if((touchY > ((sen.surfaceHeight/100)*62)) && (touchY < (((sen.surfaceHeight/100)*62)+(sen.surfaceHeight/10))) )
 				{
-					sen.vibrate = true;
-					multiplayDialog.show();
+					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
+					{
+						sen.vibrate = true;
+						multiplayDialog.show();
+					}
 				}
 				
 				if((touchY > ((sen.surfaceHeight/100)*74)) && (touchY < (((sen.surfaceHeight/100)*74)+(sen.surfaceHeight/10))) )
 				{
-					sen.vibrate = true;
-					helpDialog.show();
+					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
+					{
+						sen.vibrate = true;
+						helpDialog.show();
+					}
 				}
 	
 				if((touchY > ((sen.surfaceHeight/100)*86)) && (touchY < (((sen.surfaceHeight/100)*86)+(sen.surfaceHeight/10))) )
 				{
-					sen.vibrate = true;
-					infoDialog.show();
+					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
+					{
+						sen.vibrate = true;
+						infoDialog.show();
+					}
 				}	
 			}
 			else if(stage == 4)
@@ -310,10 +358,18 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				previousStage = 4;
 			}
 			
+			if(stage == 5)
+			{
+				if((touchX < (sen.surfaceWidth/8)) && (touchY < (sen.surfaceWidth/8)))
+				{
+					stage = 4;
+					sen.vibrate = true;
+				}
+			}
+			
 			previousX = touchX;
 			previousY = touchY;
 		}
-		
 		
 		// Let the ScaleGestureDetector inspect all events.
 		if(zoom){
@@ -361,7 +417,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			surfaceThread.finish();
 			surfaceThread = null;
 			//System.runFinalizersOnExit(true);
-			//System.exit(0);
 		}
 		
 		System.exit(0);
@@ -377,6 +432,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		canvas.save();
 		
+		// Intial start screen
 		if(stage == 0)
 		{
 			if(logoX > (sen.surfaceWidth/12))
@@ -395,6 +451,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
 		}
 		
+		// Transition from start screen to main menu
+		// Timing is computed in mainThread async thread
 		if(stage == 1)
 		{
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
@@ -430,6 +488,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
 		}		
 		
+		// Main menu
 		if(stage == 2)
 		{						
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);	
@@ -440,9 +499,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpAbout, buttonX, ((sen.surfaceHeight/100)*86), myPaint);
 		}
 		
+		// Transition from main menu to single player menu
+		// Changing of bitmap position computed in mainTask async thread 
 		if(stage == 3)
 		{			
-			// Do transition, then goto stage 4 or 2
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
 			
 			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
@@ -456,10 +516,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLevel3, levelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
 			canvas.drawBitmap(bmpLevel4, levelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
 			canvas.drawBitmap(bmpLevel5, levelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
-			
-			canvas.drawBitmap(bmpBackButton, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
 		}
 		
+		// Choose single player level
 		if(stage == 4)
 		{
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
@@ -470,9 +530,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLevel4, levelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
 			canvas.drawBitmap(bmpLevel5, levelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
 			
-			canvas.drawBitmap(bmpBackButton, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
 		}
 		
+		// Draw menu boundary platforms 
 		if((stage == 2) || (stage == 3) || (stage == 4))
 		{
 			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
@@ -496,6 +557,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			}
 		}
 		
+		
+		// Game play
 		if(stage == 5)
 		{
 			// Zooming in or out
@@ -509,6 +572,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				}
 			}
 			canvas.drawBitmap(player.img, (float)(player.position.x - player.img.getWidth()*0.5), (float)(player.position.y - player.img.getHeight()*0.5), myPaint);
+		
+			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
 		}		
 		
 		canvas.restore();
@@ -570,7 +635,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			bmpBorder = BitmapFactory.decodeResource(getResources(), R.drawable.metalplatform);
 			bmpHelp = BitmapFactory.decodeResource(getResources(), R.drawable.help_button);
 			bmpAbout = BitmapFactory.decodeResource(getResources(), R.drawable.about_button);		
-			bmpBackButton = BitmapFactory.decodeResource(getResources(), R.drawable.back_button);
+			bmpBackButtonLeft = BitmapFactory.decodeResource(getResources(), R.drawable.back_button);
 			
 			bmpLevel1 = BitmapFactory.decodeResource(getResources(), R.drawable.marble1);	
 			bmpLevel2 = BitmapFactory.decodeResource(getResources(), R.drawable.marble2);		
@@ -582,7 +647,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			bmpMulti = resizeImage(bmpMulti, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 			bmpHelp = resizeImage(bmpHelp, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 			bmpAbout = resizeImage(bmpAbout, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
-			bmpBackButton = resizeImage(bmpBackButton, (sen.surfaceWidth/8), (sen.surfaceWidth/8));
+			bmpBackButtonLeft = resizeImage(bmpBackButtonLeft, (sen.surfaceWidth/8), (sen.surfaceWidth/8));
 			
 			bmpLevel1 = resizeImage(bmpLevel1, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 			bmpLevel2 = resizeImage(bmpLevel2, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
@@ -615,9 +680,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	public void surfaceDestroyed(SurfaceHolder holder)
 	{
 		running = false;
-				
-		//Bodge to force an exit
-		//System.exit(0);
 		
 		onPause();
 	}
@@ -767,18 +829,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						else
 						{
 							stage = 2;
-						}
-						
-						
+						}	
 					}
-					
-					
-					
 				}
-				
-				
-				
-				
+		
 				try 
 				{
 					Thread.sleep(20);

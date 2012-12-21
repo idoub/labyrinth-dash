@@ -1,18 +1,16 @@
-package com.labyrinthdash;
+package com.example.helloworld;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-
+import java.net.InetAddress;
 import android.util.Log;
+
 
 
 public class InitialConnect extends Thread
@@ -28,18 +26,12 @@ public class InitialConnect extends Thread
 	String masterIP, slaveIP = null;
 	
 	DatagramSocket socket4 = null;
-	
-	String s, address;
-	boolean createConnection, readyConnect, initialConnect, screenInfo = false;
-	boolean createUDP = true;
-	DatagramPacket packet, packet2;
-	byte[] buf, buf2;
-	ByteBuffer b;
+	DatagramPacket packet;
+
+	byte[] buf;
 
 	GamePlayer player1, player2;
 
-	PrintWriter printOut;
-	BufferedReader printIn;	
 	
 	int surfaceHeight, surfaceWidth = 0;	
 	int surfaceHeight2, surfaceWidth2 = 0;
@@ -60,6 +52,8 @@ public class InitialConnect extends Thread
 	
 	public void run()
 	{
+		buf = new byte[4];
+		
 		// Initial connection to main server
 		try 
 		{
@@ -70,7 +64,7 @@ public class InitialConnect extends Thread
 			
 		    if(socket1 == null)
 		    {
-		    	createConnection = false;
+		    	//createConnection = false;
 		    	Log.d(TAG, "Socket Fail");
 		    }
 		    else
@@ -151,6 +145,7 @@ public class InitialConnect extends Thread
 			
 			//TODO: exit
 		}
+		
 		
 		// Connect devices with TCP
 		try
@@ -248,8 +243,64 @@ public class InitialConnect extends Thread
 			//TODO: exit
 		}
 		
+		
 		// Connect devices with UDP
-		
-		
+		try
+		{
+			if(isMaster == true)
+			{
+				Log.d(TAG, "About to set up Master UDP");
+				
+				socket4 = new DatagramSocket(4446);
+											
+				Log.d(TAG, "Master UDP socket created");
+											
+				packet = new DatagramPacket(buf, buf.length, InetAddress.getByName(slaveIP), 4446);
+				
+				Log.d(TAG, "Master UDP packet created");
+				
+				// Start communication threads
+				new sendPos(player1, socket4, packet, buf, true).start();
+				
+				new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
+				
+				Log.d(TAG, "Master send/receive threads started");
+			}
+			else
+			{
+				Log.d(TAG, "About to set up Slave UDP");
+				
+				socket4 = new DatagramSocket(4446);
+											
+				Log.d(TAG, "Slave UDP socket created");
+											
+				packet = new DatagramPacket(buf, buf.length, InetAddress.getByName(masterIP), 4446);
+				
+				Log.d(TAG, "Slave UDP packet created");
+				
+				// Start communication threads
+				new sendPos(player1, socket4, packet, buf, false).start();
+				
+				new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
+				
+				Log.d(TAG, "Slave send/receive threads started");
+			}			
+		}
+		catch (UnknownHostException e) 
+		{
+			e.printStackTrace();
+			
+			Log.d("ERROR", "Error in connection 5");
+			
+			//TODO: exit
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+			
+			Log.d("ERROR", "Error in connection 6");
+			
+			//TODO: exit
+		}
 	}
 }
