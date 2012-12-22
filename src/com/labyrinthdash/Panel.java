@@ -677,8 +677,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			bmpLevel2 = resizeImage(bmpLevel2, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 			bmpLevel3 = resizeImage(bmpLevel3, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 			bmpLevel4 = resizeImage(bmpLevel4, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
-			bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
-			
+			bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));	
 			
 			bmpBorder = resizeImage(bmpBorder, (sen.surfaceWidth/10), (sen.surfaceWidth/10));
 			
