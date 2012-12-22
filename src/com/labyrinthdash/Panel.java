@@ -59,6 +59,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	boolean validPress = false;
 	boolean loadImages = true;
 	boolean showPlayerName = true;
+	boolean openMenu = false;
 	Rect src;
 	Rect dst;
 	
@@ -123,6 +124,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		multiplayDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               // Canceled.
+            	openMenu = false;
             }
           });
 		
@@ -132,6 +134,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		helpDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               // Canceled.
+            	openMenu = false;
             }
           });
 		
@@ -141,6 +144,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		infoDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               // Canceled.
+            	openMenu = false;
             }
           });
 		
@@ -298,15 +302,23 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		                    	// Cancelled.
 		                    }
 		                });
-						chooseNameDialog.show();
-						sen.vibrate = true;
+		                
+		                if(openMenu == false)
+		                {
+		                	chooseNameDialog.show();
+		                	sen.vibrate = true;
+		                }
 					} 
 					else 
 					{ //If name is chosen, skip to level selection
-						stage = 3;
-        				previousStage = 2;
-        				Log.d(TAG, "Moving to stage 3");
-        				sen.vibrate = true;
+						
+						if(openMenu == false)
+						{
+							stage = 3;
+							previousStage = 2;
+							Log.d(TAG, "Moving to stage 3");
+							sen.vibrate = true;
+						}
 					}
 				}
 				
@@ -314,8 +326,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
 					{
-						sen.vibrate = true;
-						multiplayDialog.show();
+						if(openMenu == false)
+						{
+							sen.vibrate = true;
+							multiplayDialog.show();
+							openMenu = true;
+						}
 					}
 				}
 				
@@ -323,8 +339,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
 					{
-						sen.vibrate = true;
-						helpDialog.show();
+						if(openMenu == false)
+						{
+							sen.vibrate = true;
+							helpDialog.show();
+							openMenu = true;
+						}
 					}
 				}
 	
@@ -332,8 +352,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
 					{
-						sen.vibrate = true;
-						infoDialog.show();
+						if(openMenu == false)
+						{
+							sen.vibrate = true;
+							infoDialog.show();
+							openMenu = true;
+						}
 					}
 				}	
 			}
