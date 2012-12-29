@@ -45,7 +45,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int stage, previousStage = 0;
 	
 	// Bitmaps
-	Bitmap bmpBackground;
+	Bitmap bmpBackground, bmpAndroid;
 	Bitmap bmpMetal1, bmpMetal2;
 	Bitmap bmpSingle, bmpMulti;
 	Bitmap bmpHelp, bmpAbout;
@@ -59,6 +59,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	boolean validPress = false;
 	boolean loadImages = true;
 	boolean showPlayerName = true;
+	boolean openMenu = false;
 	Rect src;
 	Rect dst;
 	
@@ -123,6 +124,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		multiplayDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               // Canceled.
+            	openMenu = false;
             }
           });
 		
@@ -132,6 +134,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		helpDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               // Canceled.
+            	openMenu = false;
             }
           });
 		
@@ -141,6 +144,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		infoDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               // Canceled.
+            	openMenu = false;
             }
           });
 		
@@ -234,88 +238,102 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 
 					// Get the player name
 				    playerName = app_preferences.getString("playerName", "noName");
-				    
-				    // Player has never set name
-				    if(playerName.equals("noName"))
+				    				    
+				    if(openMenu == false)
 				    {
-				    	nameChosen = false;
-				    }		
-				    // Player has saved a name
-				    else
-				    {
-				    	nameChosen = true;
+				    	openMenu = true;
 				    	
-				    	if(showPlayerName == true)
-				    	{
-				    		// Welcome player
-					    	Toast toast = Toast.makeText(getContext(), "Welcome back " + playerName, Toast.LENGTH_SHORT);
-	                      	toast.show();
-	                      	showPlayerName = false;
-				    	}
+					    // Player has never set name
+					    if(playerName.equals("noName"))
+					    {
+					    	nameChosen = false;
+					    }		
+					    // Player has saved a name
+					    else
+					    {
+					    	nameChosen = true;
+					    	
+					    	if(showPlayerName == true)
+					    	{
+					    		// Welcome player
+						    	Toast toast = Toast.makeText(getContext(), "Welcome back " + playerName, Toast.LENGTH_SHORT);
+		                      	toast.show();
+		                      	showPlayerName = false;
+					    	}
+					    }
+						
+						// If player hasn't picked a name
+						if(!nameChosen) 
+						{
+			                final EditText input = new EditText(getContext());
+			                chooseNameDialog.setView(input);
+			                chooseNameDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() 
+			                {   
+			                	public void onClick(DialogInterface dialog, int whichButton) 
+			                    {
+			                        playerName = input.getText().toString();
+			                     
+			                        if(playerName.equals(""))
+			                        {
+			                        	// Player has no name :(
+				                      	Toast toast = Toast.makeText(getContext(), "No name entered", Toast.LENGTH_SHORT);
+				                      	toast.show();
+			                        }
+			                        else
+			                        {
+				                        // Welcome the player to the game
+				                      	Toast toast = Toast.makeText(getContext(), "Player's name set to " + playerName, Toast.LENGTH_SHORT);
+				                      	toast.show();
+				                      	
+				                      	// Save player name to the device memory
+				                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+				                      	SharedPreferences.Editor editor = app_preferences.edit();
+				                      	
+				                      	editor.putString("playerName", playerName);
+				                      	editor.commit();     	
+				                      	nameChosen = true;
+			                        }
+			                        openMenu = false;
+			                        stage = 3;
+				        			previousStage = 2;	
+			        				Log.d(TAG, "Moving to stage 3");		        				
+			                      }
+			                });
+			                
+			                chooseNameDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
+			                {
+			                    public void onClick(DialogInterface dialog, int whichButton) 
+			                    {
+			                    	// Cancelled.
+			                    	openMenu = false;
+			                    }
+			                });
+
+		                	chooseNameDialog.show();
+		                	sen.vibrate = true;
+						} 
+						else 
+						{
+							//If name is chosen, skip to level selection
+							openMenu = false;
+							stage = 3;
+							previousStage = 2;
+							Log.d(TAG, "Moving to stage 3");
+							sen.vibrate = true;
+						}
 				    }
-					
-					// If player hasn't picked a name
-					if(!nameChosen) 
-					{
-		                final EditText input = new EditText(getContext());
-		                chooseNameDialog.setView(input);
-		                chooseNameDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() 
-		                {   
-		                	public void onClick(DialogInterface dialog, int whichButton) 
-		                    {
-		                        playerName = input.getText().toString();
-		                     
-		                        if(playerName.equals(""))
-		                        {
-		                        	// Player has no name :(
-			                      	Toast toast = Toast.makeText(getContext(), "No name entered", Toast.LENGTH_SHORT);
-			                      	toast.show();
-		                        }
-		                        else
-		                        {
-			                        // Welcome the player to the game
-			                      	Toast toast = Toast.makeText(getContext(), "Player's name set to " + playerName, Toast.LENGTH_SHORT);
-			                      	toast.show();
-			                      	
-			                      	// Save player name to the device memory
-			                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-			                      	SharedPreferences.Editor editor = app_preferences.edit();
-			                      	
-			                      	editor.putString("playerName", playerName);
-			                      	editor.commit();     	
-			                      	nameChosen = true;
-		                        }
-		                        stage = 3;
-			        			previousStage = 2;	
-		        				Log.d(TAG, "Moving to stage 3");		        				
-		                      }
-		                });
-		                
-		                chooseNameDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
-		                {
-		                    public void onClick(DialogInterface dialog, int whichButton) 
-		                    {
-		                    	// Cancelled.
-		                    }
-		                });
-						chooseNameDialog.show();
-						sen.vibrate = true;
-					} 
-					else 
-					{ //If name is chosen, skip to level selection
-						stage = 3;
-        				previousStage = 2;
-        				Log.d(TAG, "Moving to stage 3");
-        				sen.vibrate = true;
-					}
 				}
 				
 				if((touchY > ((sen.surfaceHeight/100)*62)) && (touchY < (((sen.surfaceHeight/100)*62)+(sen.surfaceHeight/10))) )
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
 					{
-						sen.vibrate = true;
-						multiplayDialog.show();
+						if(openMenu == false)
+						{
+							sen.vibrate = true;
+							multiplayDialog.show();
+							openMenu = true;
+						}
 					}
 				}
 				
@@ -323,8 +341,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
 					{
-						sen.vibrate = true;
-						helpDialog.show();
+						if(openMenu == false)
+						{
+							sen.vibrate = true;
+							helpDialog.show();
+							openMenu = true;
+						}
 					}
 				}
 	
@@ -332,8 +354,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
 					{
-						sen.vibrate = true;
-						infoDialog.show();
+						if(openMenu == false)
+						{
+							sen.vibrate = true;
+							infoDialog.show();
+							openMenu = true;
+						}
 					}
 				}	
 			}
@@ -350,10 +376,16 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				}
 				else
 				{
-					stage = 5;
-					previousStage = 4;
-					Log.d(TAG, "Moving to stage 5");
-					sen.vibrate = true;
+					if((touchX > levelButtonX) && (touchY > ((sen.surfaceHeight/100)*25)))
+					{
+						if((touchX < (levelButtonX+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*25))+(sen.surfaceWidth/5)))
+						{
+							stage = 5;
+							previousStage = 4;
+							Log.d(TAG, "Moving to stage 5");
+							sen.vibrate = true;
+						}
+					}
 				}
 				previousStage = 4;
 			}
@@ -497,6 +529,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpMulti, buttonX, ((sen.surfaceHeight/100)*62), myPaint);
 			canvas.drawBitmap(bmpHelp, buttonX, ((sen.surfaceHeight/100)*74), myPaint);
 			canvas.drawBitmap(bmpAbout, buttonX, ((sen.surfaceHeight/100)*86), myPaint);
+						
+			//canvas.drawBitmap(bmpAndroid, ((sen.surfaceWidth)-(sen.surfaceWidth/7)), ((sen.surfaceHeight)-(sen.surfaceWidth/7)), myPaint);
 		}
 		
 		// Transition from main menu to single player menu
@@ -560,7 +594,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		// Game play
 		if(stage == 5)
-		{
+		{			
 			// Zooming in or out
 			canvas.scale(mScaleFactor, mScaleFactor, (float)player.getX(), (float)player.getY());
 			
@@ -636,6 +670,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			bmpHelp = BitmapFactory.decodeResource(getResources(), R.drawable.help_button);
 			bmpAbout = BitmapFactory.decodeResource(getResources(), R.drawable.about_button);		
 			bmpBackButtonLeft = BitmapFactory.decodeResource(getResources(), R.drawable.back_button);
+			bmpAndroid = BitmapFactory.decodeResource(getResources(), R.drawable.android);
 			
 			bmpLevel1 = BitmapFactory.decodeResource(getResources(), R.drawable.marble1);	
 			bmpLevel2 = BitmapFactory.decodeResource(getResources(), R.drawable.marble2);		
@@ -648,13 +683,13 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			bmpHelp = resizeImage(bmpHelp, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 			bmpAbout = resizeImage(bmpAbout, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 			bmpBackButtonLeft = resizeImage(bmpBackButtonLeft, (sen.surfaceWidth/8), (sen.surfaceWidth/8));
+			bmpAndroid = resizeImage(bmpAndroid, (sen.surfaceWidth/6), (sen.surfaceWidth/6));
 			
 			bmpLevel1 = resizeImage(bmpLevel1, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 			bmpLevel2 = resizeImage(bmpLevel2, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 			bmpLevel3 = resizeImage(bmpLevel3, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 			bmpLevel4 = resizeImage(bmpLevel4, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
-			bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
-			
+			bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));	
 			
 			bmpBorder = resizeImage(bmpBorder, (sen.surfaceWidth/10), (sen.surfaceWidth/10));
 			

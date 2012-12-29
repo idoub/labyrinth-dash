@@ -20,7 +20,7 @@ class sendPos extends Thread
 	
 	private static final String TAG = "sendPos";
 	
-	public sendPos(GamePlayer player, DatagramSocket socket, DatagramPacket packet, byte[] buf, String address, boolean isMaster)
+	public sendPos(GamePlayer player, DatagramSocket socket, DatagramPacket packet, byte[] buf, boolean isMaster)
 	{
 		this.player = player;
 		this.socket = socket;
