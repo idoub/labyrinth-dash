@@ -13,49 +13,9 @@ public class GameMap {
 	/** Cell the player starts in */
 	public static GameCell startCell;
 	/** How many cells horizontally */
-	private static int columns = 20;
+	protected static int columns = 20;
 	/** How many cells vertically */
-	private static int rows = 20;
-	
-	/**
-	 * Creates the game map. Goes through the 2D array filling it with blank
-	 * cells, then replaces certain blank cells with specified platforms.
-	 */
-	public GameMap() {
-		Map = new GameCell[columns][rows];
-
-		for(int i=0; i<columns; i++) {
-			for(int j=0; j<rows; j++) {
-				Map[i][j] = new EmptyCell(i,j);
-			}
-		}
-
-		Map[2][1] = new Platform(2,1);
-		Map[2][2] = new Platform(2,2);
-		Map[2][3] = new Platform(2,3);
-		Map[2][4] = new Platform(2,4);
-		Map[2][6] = new Platform(2,6);
-		Map[2][7] = new Platform(2,7);
-		Map[2][8] = new Platform(2,8);
-		Map[2][9] = new Platform(2,9);
-		Map[2][10] = new Platform(2,10);
-			
-		Map[1][4] = new Platform(1,4);
-		Map[1][5] = new Platform(1,5);
-		Map[1][6] = new Platform(1,6);		
-	
-		Map[3][5] = new Platform(3,5);
-		Map[4][5] = new Platform(4,5);
-		Map[5][5] = new Platform(5,5);
-		Map[6][5] = new Platform(6,5);
-	
-		Map[3][4] = new Platform(3,4);
-		Map[3][6] = new Platform(3,6);
-		
-		startCell = Map[2][1];
-		
-		Log.i("INFO", "New map created");
-	}
+	protected static int rows = 20;
 	
 	/**
 	 * Finds and returns a cell in which the provided point lies.
@@ -107,5 +67,53 @@ public class GameMap {
 			}
 		}
 		return returnable;
+	}
+}
+
+class Map1 extends GameMap {
+	public Map1() {
+		constructMap();
+		Log.i("INFO", "New map created");
+	}
+	
+	public Map1(int r, int c) {
+		rows = r;
+		columns = c;
+		constructMap();
+		Log.i("INFO", "New map created");
+	}
+	
+	private void constructMap() {
+		Map = new GameCell[columns][rows];
+
+		for(int i=0; i<columns; i++) {
+			for(int j=0; j<rows; j++) {
+				Map[i][j] = new EmptyCell(R.drawable.spaceblack,i,j);
+			}
+		}
+
+		Map[2][1] = new Platform(R.drawable.metalplatform,2,1);
+		Map[2][2] = new Platform(R.drawable.metalplatform,2,2);
+		Map[2][3] = new Platform(R.drawable.metalplatform,2,3);
+		Map[2][4] = new Platform(R.drawable.metalplatform,2,4);
+		Map[2][6] = new Platform(R.drawable.metalplatform,2,6);
+		Map[2][7] = new Platform(R.drawable.metalplatform,2,7);
+		Map[2][8] = new Platform(R.drawable.metalplatform,2,8);
+		Map[2][9] = new Platform(R.drawable.metalplatform,2,9);
+		Map[2][10] = new Platform(R.drawable.metalplatform,2,10);
+			
+		Map[1][4] = new Platform(R.drawable.metalplatform,1,4);
+		Map[1][5] = new Platform(R.drawable.metalplatform,1,5);
+		Map[1][6] = new Platform(R.drawable.metalplatform,1,6);		
+	
+		Map[3][5] = new Platform(R.drawable.metalplatform,3,5);
+		Map[4][5] = new Platform(R.drawable.metalplatform,4,5);
+		Map[5][5] = new Platform(R.drawable.metalplatform,5,5);
+		Map[6][5] = new Platform(R.drawable.metalplatform,6,5);
+	
+		Map[3][4] = new Platform(R.drawable.metalplatform,3,4);
+		Map[3][6] = new Platform(R.drawable.metalplatform,3,6);
+		
+		startCell = Map[2][1];
 	}
 }

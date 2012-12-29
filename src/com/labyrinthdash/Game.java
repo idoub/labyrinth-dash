@@ -64,7 +64,8 @@ public class Game extends Activity implements AccelerometerListener
         
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         
-        gameMap = new GameMap();
+        //gameMap = new GameMap();
+        gameMap = new Map1();
         
         // Get the accelerometer as a Sensor object so we can get information about this version
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

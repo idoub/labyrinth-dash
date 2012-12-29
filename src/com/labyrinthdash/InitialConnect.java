@@ -1,4 +1,4 @@
-package com.example.helloworld;
+package com.labyrinthdash;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -260,7 +260,7 @@ public class InitialConnect extends Thread
 				Log.d(TAG, "Master UDP packet created");
 				
 				// Start communication threads
-				new sendPos(player1, socket4, packet, buf, true).start();
+				//new sendPos(player1, socket4, packet, buf, true).start();
 				
 				new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
 				
@@ -279,7 +279,7 @@ public class InitialConnect extends Thread
 				Log.d(TAG, "Slave UDP packet created");
 				
 				// Start communication threads
-				new sendPos(player1, socket4, packet, buf, false).start();
+				//new sendPos(player1, socket4, packet, buf, false).start();
 				
 				new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
 				

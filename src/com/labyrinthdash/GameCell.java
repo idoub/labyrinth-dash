@@ -1,5 +1,7 @@
 package com.labyrinthdash;
 
+import android.graphics.Bitmap;
+
 /**
  * GameCell is the parent class for all map cells in the game. It's primary
  * purpose is to provide structure to it's children classes and to provide a
@@ -28,7 +30,7 @@ public abstract class GameCell extends GameObject {
 	private Vector2D intersectionPoint;
 	
 	/** Whether the player can fall through this cell or not. */
-	protected boolean space = true;
+	protected boolean held = false;
 	
 	/**
 	 * GameCell constructor. Takes the cell image and creates a GameObject with
@@ -114,18 +116,20 @@ public abstract class GameCell extends GameObject {
 	}
 	
 	/**
-	 * Abstract class to force standard collision method. Each cell should
-	 * cycle through it's segments, using segmentCollision() to check for
-	 * collision and modifying the player's velocity accordingly.
-	 * 
+	 * Abstract class to force standard cell reaction when the player enters the
+	 * cell.
 	 * @param player
-	 * @return true if collided, false if didn't
 	 */
-	/* 
-	 * Each cell should cycle through it's segments, using segmentCollision()
-	 * to check for collision and modifying the player's velocity accordingly
-	*/
-	protected abstract boolean hasCollided(GamePlayer player);
+	protected abstract void react(GamePlayer player);
+	
+	/**
+	 * Abstract class to force standard collision.
+	 * If the cell has collision boundaries it should cycle through it's
+	 * segments, using segmentCollision() to check for collision and modifying
+	 * the player's velocity accordingly.
+	 * @param player
+	 */
+	protected abstract boolean checkCollision(GamePlayer player);
 }
 
 /**
@@ -134,34 +138,45 @@ public abstract class GameCell extends GameObject {
  * 
  * @author Isaac Doub
  */
-class EmptyCell extends GameCell {
-	/**
-	 * Calls the parent constructor with a reference from R.drawable for the
-	 * image.
-	 */
-	public EmptyCell() {
-		super(R.drawable.spaceblack);
-	}
-	
+class EmptyCell extends GameCell {	
 	/**
 	 * Creates a new cell with a provided X and Y position.
 	 * 
 	 * @param newX Desired X position of the cell.
 	 * @param newY Desired Y position of the cell.
 	 */
-	public EmptyCell(double newX, double newY) {
-		super(R.drawable.spaceblack);
+	public EmptyCell(int png, double newX, double newY) {
+		super(png);
 		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
 	}
 
 	/**
-	 * Protected function for checking collision. Always returns false as it's
-	 * the empty cell.
-	 * 
+	 * Protected function for reacting with the player. In the empty cell the
+	 * player simply falls so this function iteratively scales the bitmap to
+	 * simulate the falling animation until the image is 5 pixels, then resets
+	 * the players position to the last good cell it was on.
+	 */
+	@Override
+	protected void react(GamePlayer player) {
+		// TODO: Animate fall, then reset
+		if(player.img.getHeight() > 5) {
+			held = true;
+			player.img = Bitmap.createScaledBitmap(player.img, (int)(player.img.getWidth()*0.75), (int)(player.img.getHeight()*0.75), false);
+		} else {
+			held = false;
+			player.makeImage(R.drawable.marble);
+			player.velocity = new Vector2D();
+			player.position = player.lastCell.position.add(player.lastCell.width/2, player.lastCell.height/2);
+		}
+	}
+
+	/**
+	 * Function to check if there's a colision within this cell. Always returns
+	 * false as it's the empty cell.
 	 * @return false
 	 */
 	@Override
-	protected boolean hasCollided(GamePlayer player) {
+	protected boolean checkCollision(GamePlayer player) {
 		return false;
 	}
 }
@@ -180,20 +195,26 @@ class Platform extends GameCell {
 	 * @param newX
 	 * @param newY
 	 */
-	public Platform(double newX, double newY) {
-		super(R.drawable.metalplatform);
+	public Platform(int png, double newX, double newY) {
+		super(png);
 		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-		space = false;
+		held = false;
 	}
 
 	/**
-	 * Protected function for checking collision. Always returns false as the
-	 * cell does not have any segments specified.
-	 * 
+	 * Protected function for reacting with the player.
+	 */
+	@Override
+	protected void react(GamePlayer player) {
+	}
+
+	/**
+	 * Function to check if there's a colision within this cell. Always returns
+	 * false.
 	 * @return false
 	 */
 	@Override
-	protected boolean hasCollided(GamePlayer player) {
+	protected boolean checkCollision(GamePlayer player) {
 		return false;
 	}
 		

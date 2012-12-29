@@ -90,25 +90,10 @@ public class GamePlayer extends GameObject
     		lastCell = currentCell;
     		currentCell = GameMap.getCellContaining(position);
     	}
-    	if(currentCell.space) fall();
-    	// Set to new position
-    	else position = position.add(velocity);
-	}
-	
-	/**
-	 * Iteratively scales the bitmap to simulate falling animation until the
-	 * image is 5 pixels, then resets the players position to the last good cell
-	 * it was on.
-	 */
-	private void fall() {
-		// TODO: Animate fall, then reset
-		if(img.getHeight() > 5) {
-			img = Bitmap.createScaledBitmap(img, (int)(img.getWidth()*0.75), (int)(img.getHeight()*0.75), false);
-		} else {
-			this.makeImage(R.drawable.marble);
-			this.velocity = new Vector2D();
-			this.position = lastCell.position.add(lastCell.width/2, lastCell.height/2);
-		}
+    	//if(currentCell.space) fall();
+    	currentCell.react(this);
+    	// If the cell doesn't hold the player go to next position
+    	if(!currentCell.held) position = position.add(velocity);
 	}
 	
 	/**
@@ -125,7 +110,7 @@ public class GamePlayer extends GameObject
 	 * collision with the edge of the screen.
 	 */
 	private void checkCollision() {
-		boolean hasCollided = false;
+		/*boolean hasCollided = false;
 		for(GameCell cell : GameMap.getCellsInProximity(nextPosition)) {
 			if(cell.hasCollided(this)) {
 				hasCollided = true;
@@ -146,7 +131,7 @@ public class GamePlayer extends GameObject
 			double v_dot_n = velocity.dot(collisionNormal);
             Vector2D twoN_v_dot_n = collisionNormal.mul(2).mul(v_dot_n);
             velocity = (velocity.sub(twoN_v_dot_n.mul(0.8)));				// 0.8 is loss of momentum on collision
-		}
+		}*/
 		
     	timeOfCollision = Double.MAX_VALUE;									// Reset the soonest collision time
     	lastCollision = null;												// Reset the point of collision
