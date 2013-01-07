@@ -31,11 +31,15 @@ public final class R {
         public static final int marble5=0x7f020011;
         public static final int metal_left=0x7f020012;
         public static final int metal_right=0x7f020013;
-        public static final int metalplatform=0x7f020014;
-        public static final int multi_button=0x7f020015;
-        public static final int single_button=0x7f020016;
-        public static final int space=0x7f020017;
-        public static final int spaceblack=0x7f020018;
+        public static final int metalboostdown=0x7f020014;
+        public static final int metalboostleft=0x7f020015;
+        public static final int metalboostright=0x7f020016;
+        public static final int metalboostup=0x7f020017;
+        public static final int metalplatform=0x7f020018;
+        public static final int multi_button=0x7f020019;
+        public static final int single_button=0x7f02001a;
+        public static final int space=0x7f02001b;
+        public static final int spaceblack=0x7f02001c;
     }
     public static final class id {
         public static final int name=0x7f070000;

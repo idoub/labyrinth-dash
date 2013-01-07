@@ -217,5 +217,27 @@ class Platform extends GameCell {
 	protected boolean checkCollision(GamePlayer player) {
 		return false;
 	}
+
+}
+
+class MetalBoostRight extends GameCell {
+	
+	public MetalBoostRight(int png, double newX, double newY) {
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		held = false;
+	}
+
+	@Override
+	protected void react(GamePlayer player) {
+		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 }
