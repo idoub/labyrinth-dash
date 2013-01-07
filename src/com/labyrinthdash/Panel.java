@@ -324,6 +324,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				    }
 				}
 				
+				// Multiplayer button
 				if((touchY > ((sen.surfaceHeight/100)*62)) && (touchY < (((sen.surfaceHeight/100)*62)+(sen.surfaceHeight/10))) )
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
@@ -337,6 +338,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 				}
 				
+				// Help button
 				if((touchY > ((sen.surfaceHeight/100)*74)) && (touchY < (((sen.surfaceHeight/100)*74)+(sen.surfaceHeight/10))) )
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
@@ -350,6 +352,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 				}
 	
+				// Information button
 				if((touchY > ((sen.surfaceHeight/100)*86)) && (touchY < (((sen.surfaceHeight/100)*86)+(sen.surfaceHeight/10))) )
 				{
 					if((touchX > buttonX) && (touchX < (buttonX + (sen.surfaceWidth/2))))
@@ -363,10 +366,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 				}	
 			}
+			// Displaying level options screen
 			else if(stage == 4)
 			{
 				Log.d(TAG, "In stage 4");
 				
+				// Return arrow button
 				if((touchX < (sen.surfaceWidth/4)) && (touchY < (sen.surfaceWidth/4)))
 				{
 					stage = 3;
@@ -376,16 +381,35 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				}
 				else
 				{
+					/* TODO
+					 * Isaac, this is where the levels are selected  
+					 * 
+					 * Currently there is only the code for the level 1 button press, however, when
+					 * we have different maps the code will be added to detect presses of the other
+					 * buttons
+					 * 
+					 * 
+					 * 
+					 */
+					
+					// Level 1 button
 					if((touchX > levelButtonX) && (touchY > ((sen.surfaceHeight/100)*25)))
 					{
 						if((touchX < (levelButtonX+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*25))+(sen.surfaceWidth/5)))
 						{
+							// TODO: Select map 1 here
+							
 							stage = 5;
 							previousStage = 4;
 							Log.d(TAG, "Moving to stage 5");
 							sen.vibrate = true;
 						}
 					}
+					
+					// Level 2 button
+					
+					// Level 3 button
+					
 				}
 				previousStage = 4;
 			}

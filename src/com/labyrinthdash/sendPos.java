@@ -17,6 +17,8 @@ class sendPos extends Thread
 	String address;
 	boolean isMaster;
 	int asteroidPos;
+	int inX, inY = 0;
+	double inX2, inY2 = 0;
 	
 	private static final String TAG = "sendPos";
 	
@@ -35,11 +37,16 @@ class sendPos extends Thread
 		buf2 = new byte[2];
 		
 		while(sen.endThread == false)
-		{
+		{		
 			// Set Y
-			buf2 = new byte[4];         // MAY BE UNNECESSARY
+			buf2 = new byte[4];
 			b = ByteBuffer.allocate(4);
-			b.putDouble(player.getY());
+			
+			float IsaacY = 89;
+			
+			inY = (int)IsaacY;
+			
+			b.putInt(inY);
 			buf2 = b.array();
 			
 			buf[0] = buf2[2];
@@ -47,8 +54,12 @@ class sendPos extends Thread
 				
 			// Set X
 			buf2 = new byte[4];
-			b = ByteBuffer.allocate(4);			
-			b.putDouble(player.getX());			
+			b = ByteBuffer.allocate(4);	
+			
+			float IsaacX = 118;
+			
+			inX = (int)IsaacX;	
+			b.putInt(inX);
 			buf2 = b.array();	
 				
 			buf[2] = buf2[2];

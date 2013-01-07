@@ -92,28 +92,48 @@ class Map1 extends GameMap {
 			}
 		}
 
+		Map[1][1] = new Platform(R.drawable.metalplatform,1,1);
 		Map[2][1] = new Platform(R.drawable.metalplatform,2,1);
-		Map[2][2] = new Platform(R.drawable.metalplatform,2,2);
-		Map[2][3] = new Platform(R.drawable.metalplatform,2,3);
-		Map[2][4] = new Platform(R.drawable.metalplatform,2,4);
-		Map[2][6] = new Platform(R.drawable.metalplatform,2,6);
-		Map[2][7] = new Platform(R.drawable.metalplatform,2,7);
-		Map[2][8] = new Platform(R.drawable.metalplatform,2,8);
-		Map[2][9] = new Platform(R.drawable.metalplatform,2,9);
-		Map[2][10] = new Platform(R.drawable.metalplatform,2,10);
-			
-		Map[1][4] = new Platform(R.drawable.metalplatform,1,4);
-		Map[1][5] = new Platform(R.drawable.metalplatform,1,5);
-		Map[1][6] = new Platform(R.drawable.metalplatform,1,6);		
-	
-		Map[3][5] = new Platform(R.drawable.metalplatform,3,5);
-		Map[4][5] = new Platform(R.drawable.metalplatform,4,5);
-		Map[5][5] = new Platform(R.drawable.metalplatform,5,5);
-		Map[6][5] = new Platform(R.drawable.metalplatform,6,5);
-	
-		Map[3][4] = new Platform(R.drawable.metalplatform,3,4);
-		Map[3][6] = new Platform(R.drawable.metalplatform,3,6);
+		Map[2][0] = new Platform(R.drawable.metalplatform,2,0);
 		
-		startCell = Map[2][1];
+		Map[0][1] = new Platform(R.drawable.metalplatform,0,1);
+		Map[0][2] = new Platform(R.drawable.metalplatform,0,2);
+		Map[0][3] = new Platform(R.drawable.metalplatform,0,3);
+		Map[0][4] = new Platform(R.drawable.metalplatform,0,4);
+		Map[0][5] = new Platform(R.drawable.metalplatform,0,5);
+		Map[0][6] = new Platform(R.drawable.metalplatform,0,6);
+		Map[0][7] = new Platform(R.drawable.metalplatform,0,7);
+		Map[0][8] = new Platform(R.drawable.metalplatform,0,8);
+		Map[0][9] = new Platform(R.drawable.metalplatform,0,9);
+		Map[0][10] = new Platform(R.drawable.metalplatform,0,10);
+
+		Map[1][10] = new Platform(R.drawable.metalplatform,1,10);
+		Map[2][10] = new Platform(R.drawable.metalplatform,2,10);
+		Map[3][10] = new Platform(R.drawable.metalplatform,3,10);
+		Map[4][10] = new Platform(R.drawable.metalplatform,4,10);
+		Map[5][10] = new Platform(R.drawable.metalplatform,5,10);	
+		Map[5][9] = new Platform(R.drawable.metalplatform,5,9);
+		Map[5][8] = new Platform(R.drawable.metalplatform,5,8);
+		Map[5][7] = new Platform(R.drawable.metalplatform,5,7);
+		Map[4][7] = new Platform(R.drawable.metalplatform,4,7);		
+		Map[3][7] = new Platform(R.drawable.metalplatform,3,7);
+
+		Map[2][7] = new Platform(R.drawable.metalplatform,2,7);
+		Map[2][6] = new Platform(R.drawable.metalplatform,2,6);
+		Map[2][5] = new Platform(R.drawable.metalplatform,2,5);
+		Map[2][4] = new Platform(R.drawable.metalplatform,2,4);
+		
+		Map[3][4] = new Platform(R.drawable.metalplatform,3,4);
+		Map[4][4] = new Platform(R.drawable.metalplatform,4,4);
+		
+		Map[5][4] = new Platform(R.drawable.metalplatform,5,4);
+		Map[5][3] = new Platform(R.drawable.metalplatform,5,3);
+		Map[5][2] = new Platform(R.drawable.metalplatform,5,2);
+		Map[5][1] = new Platform(R.drawable.metalplatform,5,1);
+	
+		Map[4][0] = new Platform(R.drawable.metalplatform,4,0);
+		Map[4][1] = new Platform(R.drawable.metalplatform,4,1);		
+		
+		startCell = Map[2][0];
 	}
 }
