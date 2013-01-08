@@ -7,6 +7,12 @@ import java.nio.ByteBuffer;
 
 import android.util.Log;
 
+/**
+ * Send player positions to opponent device over
+ * UDP link
+ * 
+ * @author Matthew
+ */
 class sendPos extends Thread
 {
 	GamePlayer player;
@@ -14,7 +20,6 @@ class sendPos extends Thread
 	DatagramPacket packet;
 	byte[] buf, buf2;
 	ByteBuffer b;
-	String address;
 	boolean isMaster;
 	int asteroidPos;
 	int inX, inY = 0;
@@ -28,7 +33,6 @@ class sendPos extends Thread
 		this.socket = socket;
 		this.packet = packet;
 		this.buf = buf;
-		this.address = address;
 		this.isMaster = isMaster;
 	}
 	

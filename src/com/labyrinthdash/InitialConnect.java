@@ -11,8 +11,22 @@ import java.net.UnknownHostException;
 import java.net.InetAddress;
 import android.util.Log;
 
-
-
+/**
+ * Create a connection to opponent device via main server
+ * 
+ * Connection process:
+ * 
+ * 1. Initiate TCP connection with main server
+ * 2. Await assignment of opponent
+ * 3. Break connection with main server when received opponent IP
+ * 3. If master, initiate TCP connection with opponent device
+ * 4. Complete handshake transfer of information over TCP link
+ * 5. Break TCP link with opponent
+ * 6. If master, initiate UDP connection with opponent
+ * 7. Begin send and receive communication threads
+ * 
+ * @author Matthew Woodacre
+ */
 public class InitialConnect extends Thread
 {
 	//Socket connection

@@ -1,7 +1,6 @@
 package com.labyrinthdash;
 
 import com.labyrinthdash.R;
-
 import android.graphics.Bitmap;
 
 /**

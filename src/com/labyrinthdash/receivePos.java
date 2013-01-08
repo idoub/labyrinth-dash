@@ -7,6 +7,12 @@ import java.nio.ByteBuffer;
 
 import android.util.Log;
 
+/**
+ * Receive opponent positions from opponent device over
+ * UDP link
+ * 
+ * @author Matthew
+ */
 class receivePos extends Thread
 {
 	GamePlayer player;

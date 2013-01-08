@@ -51,7 +51,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	Bitmap bmpHelp, bmpAbout;
 	Bitmap bmpOriginalLogo, bmpLogo;
 	Bitmap bmpBackButtonLeft, bmpBorder;
-	
 	Bitmap bmpLevel1, bmpLevel2, bmpLevel3, bmpLevel4, bmpLevel5;
 	
 	boolean scaleImages = true;
@@ -69,6 +68,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int buttonX, levelButtonX, levelButtonX2, backButtonX = 0;
 	boolean initialMove = true;
 	
+	// Player object
 	GamePlayer player;
 	String playerName;
 	
@@ -151,30 +151,25 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		chooseNameDialog = new AlertDialog.Builder(getContext());
 		chooseNameDialog.setTitle("Welcome!");
 		chooseNameDialog.setMessage("Put your name in the textbox:");
+		
+		/*
+		 * Listener for any touch on the screen
+		 * Calls dealTouch() to decide what to do with user interaction
+		 */
 		setOnTouchListener(new OnTouchListener()
 		{
 			public boolean onTouch(View v, MotionEvent event) 
 			{
 				dealTouch(event);
 				
-				/*touchX = (int)event.getX();
-			    touchY = (int)event.getY();
-			    
-			    switch (event.getAction()) 
-			    {
-			        case MotionEvent.ACTION_DOWN:
-			        case MotionEvent.ACTION_MOVE:
-			        case MotionEvent.ACTION_UP:
-			        	Log.d(TAG, "Screen release");
-			        	Log.d(TAG, "touchX: " + touchX);
-			    		Log.d(TAG, "touchY: " + touchY);
-			    }*/
-				
 				return true;
 			}
 		});
 	}
 
+	/*
+	 * Implements listener to detect gestures and change player view accordingly
+	 */
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener 
 	{
 	    @Override
@@ -189,6 +184,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	    }
 	}
 	
+	/*
+	 * Called when the screen is touched
+	 */
 	private void dealTouch(MotionEvent event)
 	{
 		// Get touch position
@@ -199,6 +197,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		Log.d(TAG, "touchY: " + touchY);
 
 		// Check if 'valid' touch 
+		/*
+		 * In order to stop any button bounce the next touch must 
+		 * be at least a set distance from the previous touch
+		 *
+		 */
 		if((Math.abs(touchX-previousX) > 6) && (Math.abs(touchY-previousY) > 6))
 		{
 			Log.d(TAG, "Valid press");
@@ -210,16 +213,22 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			validPress = false;
 		}
 		
-		// Test if position is near android
-		if(((touchX - player.position.x) < (player.width*1.5)) && ((touchX - player.position.x) > 0))
+		/*
+		 *  Test if position is near ball (debug only), allows ball overide movement
+		 */
+		/*if(((touchX - player.position.x) < (player.width*1.5)) && ((touchX - player.position.x) > 0))
 		{
 			if(((touchY - player.position.y) < (player.height*1.5)) && ((touchY - player.position.y) > 0))
 			{
 				player.position.y = touchY - (player.width/2);
 				player.position.x = touchX - (player.height/2);
 			}
-		}
+		}*/
 		
+		/*
+		 * If the touch is valid then depending on the current 
+		 * menu affects touch effect 
+		 */
 		if(validPress == true)
 		{
 			if(stage == 0)
@@ -388,8 +397,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					 * we have different maps the code will be added to detect presses of the other
 					 * buttons
 					 * 
-					 * 
-					 * 
 					 */
 					
 					// Level 1 button
@@ -433,6 +440,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
+	/*
+	 * Initialse player position and screen size information
+	 */
+	
 	public void initialise()
 	{
 		player.position = GameMap.startCell.position.add(GameMap.startCell.width/2, GameMap.startCell.height/2);
@@ -481,6 +492,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		//onDestroy();
 	}
 	
+	/*
+	 * Handles all displaying of graphics on the device screen
+	 * Each stage number designates a different application screen to be displayed
+	 *  
+	 */
 	@Override
 	public void onDraw(Canvas canvas)
 	{		
@@ -652,6 +668,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		//Initialise player, obstacle etc.
 		initialise();
 		
+		// Scale primary images
 		if(scaleInitialImages == true)
 		{
 			bmpOriginalLogo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
@@ -677,6 +694,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		running = true;
 
+		// Begin surface thread
 		if (surfaceThread != null)
 		{
 			surfaceThread.start();
@@ -685,6 +703,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		// Run thread
 		appTask = new mainTask().execute();
 		
+		// Scale secondary images
 		if(scaleImages == true)
 		{			
 			bmpBackground = BitmapFactory.decodeResource(getResources(),R.drawable.space);
@@ -721,6 +740,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
+	/*
+	 *  Function used to  create a new resized image for every element
+	 */
 	public Bitmap resizeImage(Bitmap inputImage, int newHeight, int newWidth) 
 	{
 		int width = inputImage.getWidth();
@@ -906,6 +928,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	}
 }
 
+/*
+ *  Public class to share key information between different classes
+ */
 class sen
 {
 	public static double longitude;
