@@ -526,7 +526,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		// Transition from start screen to main menu
 		// Timing is computed in mainThread async thread
 		if(stage == 1)
-		{
+		{			
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
 			
 			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
@@ -668,19 +668,22 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		//Initialise player, obstacle etc.
 		initialise();
 		
-		// Scale primary images
+		// Load and Scale primary images
 		if(scaleInitialImages == true)
 		{
+			// Load images
 			bmpOriginalLogo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
 			bmpMetal1 = BitmapFactory.decodeResource(getResources(), R.drawable.metal_left);
 			bmpMetal2 = BitmapFactory.decodeResource(getResources(), R.drawable.metal_right);
 			
+			logoSize = 2;
+
+			// Scale Images
 			bmpMetal1 = resizeImage(bmpMetal1, sen.surfaceHeight, (sen.surfaceWidth/2));
 			bmpMetal2 = resizeImage(bmpMetal2, sen.surfaceHeight, (sen.surfaceWidth/2));
-			
-			logoSize = 2;
 			bmpLogo = resizeImage(bmpOriginalLogo, (sen.surfaceHeight/4), logoSize);
 			
+			// Image related data
 			buttonX = (sen.surfaceWidth/4);
 			rightPanel = sen.surfaceWidth/2;
 			logoY = (sen.surfaceHeight/4);
@@ -700,44 +703,45 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			surfaceThread.start();
 		}
 		
-		// Run thread
-		appTask = new mainTask().execute();
-		
+		// Run thread (used for timing)
+		appTask = new mainTask().execute();	
+	}
+	
+	public boolean loadSecondaryImages()
+	{
 		// Scale secondary images
-		if(scaleImages == true)
-		{			
-			bmpBackground = BitmapFactory.decodeResource(getResources(),R.drawable.space);
-			bmpSingle = BitmapFactory.decodeResource(getResources(), R.drawable.single_button);
-			bmpMulti = BitmapFactory.decodeResource(getResources(), R.drawable.multi_button);
-			bmpBorder = BitmapFactory.decodeResource(getResources(), R.drawable.metalplatform);
-			bmpHelp = BitmapFactory.decodeResource(getResources(), R.drawable.help_button);
-			bmpAbout = BitmapFactory.decodeResource(getResources(), R.drawable.about_button);		
-			bmpBackButtonLeft = BitmapFactory.decodeResource(getResources(), R.drawable.back_button);
-			bmpAndroid = BitmapFactory.decodeResource(getResources(), R.drawable.android);
 			
-			bmpLevel1 = BitmapFactory.decodeResource(getResources(), R.drawable.marble1);	
-			bmpLevel2 = BitmapFactory.decodeResource(getResources(), R.drawable.marble2);		
-			bmpLevel3 = BitmapFactory.decodeResource(getResources(), R.drawable.marble3);		
-			bmpLevel4 = BitmapFactory.decodeResource(getResources(), R.drawable.marble4);		
-			bmpLevel5 = BitmapFactory.decodeResource(getResources(), R.drawable.marble5);		
-			
-			bmpSingle = resizeImage(bmpSingle, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
-			bmpMulti = resizeImage(bmpMulti, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
-			bmpHelp = resizeImage(bmpHelp, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
-			bmpAbout = resizeImage(bmpAbout, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
-			bmpBackButtonLeft = resizeImage(bmpBackButtonLeft, (sen.surfaceWidth/8), (sen.surfaceWidth/8));
-			bmpAndroid = resizeImage(bmpAndroid, (sen.surfaceWidth/6), (sen.surfaceWidth/6));
-			
-			bmpLevel1 = resizeImage(bmpLevel1, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
-			bmpLevel2 = resizeImage(bmpLevel2, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
-			bmpLevel3 = resizeImage(bmpLevel3, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
-			bmpLevel4 = resizeImage(bmpLevel4, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
-			bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));	
-			
-			bmpBorder = resizeImage(bmpBorder, (sen.surfaceWidth/10), (sen.surfaceWidth/10));
-			
-			scaleImages = false;
-		}
+		bmpBackground = BitmapFactory.decodeResource(getResources(),R.drawable.space);
+		bmpSingle = BitmapFactory.decodeResource(getResources(), R.drawable.single_button);
+		bmpMulti = BitmapFactory.decodeResource(getResources(), R.drawable.multi_button);
+		bmpBorder = BitmapFactory.decodeResource(getResources(), R.drawable.metalplatform);
+		bmpHelp = BitmapFactory.decodeResource(getResources(), R.drawable.help_button);
+		bmpAbout = BitmapFactory.decodeResource(getResources(), R.drawable.about_button);		
+		bmpBackButtonLeft = BitmapFactory.decodeResource(getResources(), R.drawable.back_button);
+		bmpAndroid = BitmapFactory.decodeResource(getResources(), R.drawable.android);
+					
+		bmpLevel1 = BitmapFactory.decodeResource(getResources(), R.drawable.marble1);	
+		bmpLevel2 = BitmapFactory.decodeResource(getResources(), R.drawable.marble2);		
+		bmpLevel3 = BitmapFactory.decodeResource(getResources(), R.drawable.marble3);		
+		bmpLevel4 = BitmapFactory.decodeResource(getResources(), R.drawable.marble4);		
+		bmpLevel5 = BitmapFactory.decodeResource(getResources(), R.drawable.marble5);		
+					
+		bmpSingle = resizeImage(bmpSingle, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
+		bmpMulti = resizeImage(bmpMulti, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
+		bmpHelp = resizeImage(bmpHelp, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
+		bmpAbout = resizeImage(bmpAbout, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
+		bmpBackButtonLeft = resizeImage(bmpBackButtonLeft, (sen.surfaceWidth/8), (sen.surfaceWidth/8));
+		bmpAndroid = resizeImage(bmpAndroid, (sen.surfaceWidth/6), (sen.surfaceWidth/6));
+					
+		bmpLevel1 = resizeImage(bmpLevel1, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
+		bmpLevel2 = resizeImage(bmpLevel2, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
+		bmpLevel3 = resizeImage(bmpLevel3, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
+		bmpLevel4 = resizeImage(bmpLevel4, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
+		bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));	
+				
+		bmpBorder = resizeImage(bmpBorder, (sen.surfaceWidth/10), (sen.surfaceWidth/10));
+		
+		return true;
 	}
 
 	/*
@@ -834,7 +838,28 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					{
 						try 
 						{
-							Thread.sleep(500);
+							Thread.sleep(200);
+						} 
+						catch (Exception e)
+						{
+							Log.d(TAG, "Thread sleep fail");
+						}
+						
+						if(scaleImages == true)
+						{
+							boolean safe = loadSecondaryImages();
+							
+							if(safe != true)
+							{
+								// Really bad day
+							}
+							
+							scaleImages = false;
+						}
+						
+						try 
+						{
+							Thread.sleep(200);
 						} 
 						catch (Exception e)
 						{
