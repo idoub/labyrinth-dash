@@ -35,8 +35,11 @@ public class GamePlayer extends GameObject
 	public int jumpLength = 0;
 	/** The highest point of the jump */
 	public int apex = 0;
+
 	/** If the player has finished the map */
 	public boolean finshed = false;
+	/** How many times the player falls off */
+	public int penalty = 0;
 	
 	/**
 	 * Creates the player by calling the parent constructor of GameObject and
@@ -200,5 +203,6 @@ public class GamePlayer extends GameObject
 		jumpLength = 0;
 		apex = 0;
 		finshed = false;
+		penalty = 0;
 	}
 }

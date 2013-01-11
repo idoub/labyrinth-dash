@@ -169,6 +169,7 @@ class EmptyCell extends GameCell {
 				player.makeImage(R.drawable.marble);
 				player.velocity = new Vector2D();
 				player.position = player.lastCell.position.add(player.lastCell.width/2, player.lastCell.height/2);
+				player.penalty++;
 			}
 		}
 	}
