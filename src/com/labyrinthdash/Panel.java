@@ -529,11 +529,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		{
 			if(logoX > (sen.surfaceWidth/12))
 			{
-				logoX--;
+				logoX-=2;
 			}
 			if(logoSize < (sen.surfaceWidth)-(sen.surfaceWidth/6))
 			{
-				logoSize += 2;
+				logoSize += 4;
 				bmpLogo = resizeImage(bmpOriginalLogo, (sen.surfaceHeight/4), logoSize);
 			}
 			
@@ -862,11 +862,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							
 				if(stage == 0)
 				{										
-					if((logoX == sen.surfaceWidth/12) && (logoSize == (sen.surfaceWidth)-(sen.surfaceWidth/6)))
+					if((logoX <= sen.surfaceWidth/12) && (logoSize >= (sen.surfaceWidth)-(sen.surfaceWidth/6)))
 					{
 						try 
 						{
-							Thread.sleep(200);
+							Thread.sleep(5);
 						} 
 						catch (Exception e)
 						{
@@ -887,7 +887,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						
 						try 
 						{
-							Thread.sleep(200);
+							Thread.sleep(50);
 						} 
 						catch (Exception e)
 						{
