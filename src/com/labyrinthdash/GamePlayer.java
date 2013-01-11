@@ -3,6 +3,8 @@ package com.labyrinthdash;
 import com.labyrinthdash.R;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 /**
  * GamePlayer is the sphere which the player will be controlling.
@@ -120,6 +122,9 @@ public class GamePlayer extends GameObject
 	}
 	
 	private void jump() {
+		Animation playerJumpAnimation = AnimationUtils.loadAnimation(Game.getContext(), R.anim.playerjump);
+		
+		/*
 		if(jumpLength == 0) {
 			jumping = false;
 		} else if(apex < jumpLength) {
@@ -128,7 +133,7 @@ public class GamePlayer extends GameObject
 		} else {
 			jumpLength--;
 			img = Bitmap.createScaledBitmap(img, (int)(img.getWidth()*0.95), (int)(img.getHeight()*0.95), false);
-		}
+		}*/
 	}
 	
 	/**

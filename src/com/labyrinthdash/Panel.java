@@ -688,6 +688,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			// Zooming in or out
 			canvas.scale(mScaleFactor, mScaleFactor, (float)player.getX(), (float)player.getY());
 			
+			canvas.drawBitmap(map.background, 0, 0, myPaint);
+			
 			for(GameCell col[] : map.Map) 
 			{
 				for(GameCell cell : col) 
@@ -695,6 +697,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					canvas.drawBitmap(cell.img, (float)cell.position.x, (float)cell.position.y, myPaint);
 				}
 			}
+			
 			canvas.drawBitmap(player.img, (float)(player.position.x - player.img.getWidth()*0.5), (float)(player.position.y - player.img.getHeight()*0.5), myPaint);
 		
 			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);

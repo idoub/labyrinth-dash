@@ -1,5 +1,10 @@
 package com.labyrinthdash;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 /**
@@ -14,6 +19,8 @@ public class GameMap {
 	public GameCell startCell;
 	/** Cell the player is trying to reach*/
 	public GameCell endCell;
+	/** The maps background */
+	public Bitmap background;
 	/** How many cells horizontally */
 	protected int columns = 20;
 	/** How many cells vertically */
@@ -70,6 +77,20 @@ public class GameMap {
 		}
 		return returnable;
 	}
+	
+	protected void makeBackground(int png) {
+		Context context = Game.getContext();
+		
+		Resources res = context.getResources();
+		DisplayMetrics metrics = new DisplayMetrics();
+		
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inDensity = metrics.densityDpi;
+		o.outHeight = metrics.heightPixels;
+		o.outWidth = metrics.widthPixels;
+		
+		background = BitmapFactory.decodeResource(res, png, o);
+	}
 }
 
 class Map1 extends GameMap {
@@ -86,11 +107,12 @@ class Map1 extends GameMap {
 	}
 	
 	private void constructMap() {
+		makeBackground(R.drawable.galaxy);
 		Map = new GameCell[columns][rows];
 
 		for(int i=0; i<columns; i++) {
 			for(int j=0; j<rows; j++) {
-				Map[i][j] = new EmptyCell(R.drawable.spaceblack,i,j);
+				Map[i][j] = new EmptyCell(R.drawable.blank,i,j);
 			}
 		}
 
@@ -159,11 +181,12 @@ class Map2 extends GameMap {
 	}
 	
 	private void constructMap() {
+		makeBackground(R.drawable.clouds);
 		Map = new GameCell[columns][rows];
 
 		for(int i=0; i<columns; i++) {
 			for(int j=0; j<rows; j++) {
-				Map[i][j] = new EmptyCell(R.drawable.spaceblack,i,j);
+				Map[i][j] = new EmptyCell(R.drawable.blank,i,j);
 			}
 		}
 
