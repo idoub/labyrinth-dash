@@ -190,6 +190,7 @@ public class GamePlayer extends GameObject
 	}
 	
 	public void reset() {
+		makeImage(R.drawable.marble);
 		velocity = new Vector2D();
 		nextPosition = new Vector2D();
 		lastCollision = null;
