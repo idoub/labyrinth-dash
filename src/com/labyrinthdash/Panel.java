@@ -110,20 +110,20 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		// Adjust zoom level to DPI
 		dm = getResources().getDisplayMetrics().densityDpi;
-		switch(dm){
+		/*switch(dm){
 	     case DisplayMetrics.DENSITY_LOW:
 	    	 mScaleFactor = 1f;
 	         break;
 	     case DisplayMetrics.DENSITY_MEDIUM:
-	    	 mScaleFactor = 1.1f;
+	    	 mScaleFactor = 1f;
 	         break;
 	     case DisplayMetrics.DENSITY_HIGH:
-	    	 mScaleFactor = 1.4f;
+	    	 mScaleFactor = 1f;
 	    	 break;
 	     case DisplayMetrics.DENSITY_XHIGH:
-	    	 mScaleFactor = 1.5f;
+	    	 mScaleFactor = 1f;
 	    	 break;
-		}
+		}*/
 		
 		// Prepare Dialogs
 		multiplayDialog = new AlertDialog.Builder(getContext());
@@ -468,7 +468,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			{
 				if((touchX < (sen.surfaceWidth/8)) && (touchY < (sen.surfaceWidth/8)))
 				{
-					stage = 4;
+					stage = 7;
 					sen.vibrate = true;
 				}
 			}
@@ -658,8 +658,22 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLevel1, countDown3, ((sen.surfaceHeight/100)*70), myPaint);
 		}
 		
+		// Transition from game play
+		if(stage == 7)
+		{
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			
+			canvas.drawBitmap(bmpLevel1, plevelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
+			canvas.drawBitmap(bmpLevel2, plevelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
+			canvas.drawBitmap(bmpLevel3, plevelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
+			canvas.drawBitmap(bmpLevel4, plevelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel5, plevelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
+			
+			canvas.drawBitmap(bmpBackButtonLeft, pbackButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+		}
+		
 		// Draw menu boundary platforms 
-		if((stage == 2) || (stage == 3) || (stage == 4) || (stage == 5))
+		if((stage == 2) || (stage == 3) || (stage == 4) || (stage == 5) || (stage == 7))
 		{
 			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
 			{
@@ -688,8 +702,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			// Zooming in or out
 			canvas.scale(mScaleFactor, mScaleFactor, (float)player.getX(), (float)player.getY());
 			
-			//canvas.drawBitmap(map.background, 0, 0, myPaint);
-			
 			for(GameCell col[] : map.Map) 
 			{
 				for(GameCell cell : col) 
@@ -697,13 +709,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					canvas.drawBitmap(cell.img, (float)cell.position.x, (float)cell.position.y, myPaint);
 				}
 			}
-			
 			canvas.drawBitmap(player.img, (float)(player.position.x - player.img.getWidth()*0.5), (float)(player.position.y - player.img.getHeight()*0.5), myPaint);
 		
 			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
 			
 			if(player.finshed) {
-				stage = 4;
+				stage = 7;
 			}
 		}		
 		
@@ -1081,6 +1092,23 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					{
 						stage = 6;	
 						player.reset();
+					}
+				}
+				
+				if(stage == 7)
+				{
+					if(plevelButtonX < levelButtonX)
+					{			
+						//TODO: "Level" button
+						plevelButtonX += (sen.surfaceWidth/10);
+						plevelButtonX2 += (sen.surfaceWidth/10);
+						pbackButtonX += (sen.surfaceWidth/10);
+					}
+					else
+					{
+						previousX = 9999;
+						previousY = 9999;
+						stage = 4;
 					}
 				}
 				
