@@ -147,18 +147,18 @@ class Map1 extends GameMap {
 		Map[3][6] = new Platform(R.drawable.metalplatform,3,6);
 		Map[3][5] = new Platform(R.drawable.metalplatform,3,5);
 
-		Map[2][7] = new Platform(R.drawable.metalplatform,2,7);
-		Map[2][6] = new Platform(R.drawable.metalplatform,2,6);
-		Map[2][5] = new Platform(R.drawable.metalplatform,2,5);
+		Map[2][7] = new WallLeft(R.drawable.metalwallleft,2,7);
+		Map[2][6] = new WallLeft(R.drawable.metalwallleft,2,6);
+		Map[2][5] = new WallLeft(R.drawable.metalwallleft,2,5);
 		Map[2][4] = new BoostRight(R.drawable.metalboostright,2,4);
 		
 		Map[3][4] = new Platform(R.drawable.metalplatform,3,4);
 		Map[4][4] = new Platform(R.drawable.metalplatform,4,4);
 		
-		Map[5][4] = new Platform(R.drawable.metalplatform,5,4);
-		Map[5][3] = new Platform(R.drawable.metalplatform,5,3);
-		Map[5][2] = new Platform(R.drawable.metalplatform,5,2);
-		Map[5][1] = new Platform(R.drawable.metalplatform,5,1);
+		Map[5][4] = new WallRight(R.drawable.metalwallright,5,4);
+		Map[5][3] = new WallRight(R.drawable.metalwallright,5,3);
+		Map[5][2] = new WallRight(R.drawable.metalwallright,5,2);
+		Map[5][1] = new WallRight(R.drawable.metalwallright,5,1);
 	
 		Map[4][0] = new PlatformEnd(R.drawable.metalend,4,0);
 		Map[4][1] = new Platform(R.drawable.metalplatform,4,1);		

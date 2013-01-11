@@ -314,6 +314,48 @@ class BoostUp extends GameCell {
 	}
 }
 
+class WallRight extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	
+	public WallRight(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x + (img.getWidth() - 5), this.position.y);
+		P2 = new Vector2D(this.position.x + (img.getWidth() - 5), this.position.y + img.getHeight());
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		return segmentCollision(P1, P2, player);
+	}
+}
+
+class WallLeft extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	
+	public WallLeft(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x + 5, this.position.y);
+		P2 = new Vector2D(this.position.x + 5, this.position.y + img.getHeight());
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		return segmentCollision(P1, P2, player);
+	}
+}
+
 class Jump extends GameCell {
 	
 	public Jump(int png, double newX, double newY)	{
