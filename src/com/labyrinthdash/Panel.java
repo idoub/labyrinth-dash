@@ -2,7 +2,6 @@ package com.labyrinthdash;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +46,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int previousX, previousY = 0;
 	int stage, previousStage = 0;
 	int countDown1, countDown2, countDown3 = 0;
+	int score1, score2, score3, score4, score5;
 	
 	// Bitmaps
 	Bitmap bmpBackground, bmpAndroid;
@@ -56,6 +56,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	Bitmap bmpOriginalLogo, bmpLogo;
 	Bitmap bmpBackButtonLeft, bmpBorder, bmpLoading;
 	Bitmap bmpLevel1, bmpLevel2, bmpLevel3, bmpLevel4, bmpLevel5;
+	Bitmap bmpStar1, bmpStar2, bmpStar3;
 	
 	boolean scaleImages = true;
 	boolean scaleInitialImages = true;
@@ -79,6 +80,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	GameMap map;
 	int levelSelect = 0;
 	int loadLevel = 0;
+	int score = 0;
 	
 	//Zooming
 	private ScaleGestureDetector mScaleDetector;
@@ -251,7 +253,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				if((touchY > (sen.surfaceHeight/2)) && (touchY < ((sen.surfaceHeight/2)+(sen.surfaceHeight/10))) )
 				{
 					// Check is there is a saved name in memory
-					 SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+					SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 					// Get the player name
 				    playerName = app_preferences.getString("playerName", "noName");
@@ -448,6 +450,47 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 
 					//Level 3 button
+					if((touchX > levelButtonX) && (touchY > ((sen.surfaceHeight/100)*55)))
+					{
+						if((touchX < (levelButtonX+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*55))+(sen.surfaceWidth/5)))
+						{
+							sen.vibrate = true;
+							loadLevel = 0;
+							levelSelect = 3;
+							stage = 5;
+							previousStage = 4;
+							Log.d(TAG, "Moving to stage 5");
+						}
+					}
+					
+					// Level 4 button
+					if((touchX > levelButtonX2) && (touchY > ((sen.surfaceHeight/100)*70)))
+					{
+						if((touchX < (levelButtonX2+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*70))+(sen.surfaceWidth/5)))
+						{
+							sen.vibrate = true;
+							loadLevel = 0;
+							levelSelect = 4;
+							stage = 5;
+							previousStage = 4;
+							Log.d(TAG, "Moving to stage 5");
+						}
+					}
+					
+					//Level 5 button
+					if((touchX > levelButtonX) && (touchY > ((sen.surfaceHeight/100)*85)))
+					{
+						if((touchX < (levelButtonX+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*85))+(sen.surfaceWidth/5)))
+						{
+							sen.vibrate = true;
+							loadLevel = 0;
+							levelSelect = 5;
+							stage = 5;
+							previousStage = 4;
+							Log.d(TAG, "Moving to stage 5");
+						}
+					}
+					
 					
 					// For transition
 					pbackButtonX = backButtonX;
@@ -469,6 +512,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				if((touchX < (sen.surfaceWidth/8)) && (touchY < (sen.surfaceWidth/8)))
 				{
 					stage = 7;
+					score = 100;
 					sen.vibrate = true;
 				}
 			}
@@ -493,7 +537,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		dst = new Rect(0, 0, sen.surfaceWidth, sen.surfaceHeight);
 	}
 	
-		
 	public void resume() 
 	{
 		if (surfaceThread == null)
@@ -600,8 +643,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpMulti, buttonX, ((sen.surfaceHeight/100)*62), myPaint);
 			canvas.drawBitmap(bmpHelp, buttonX, ((sen.surfaceHeight/100)*74), myPaint);
 			canvas.drawBitmap(bmpAbout, buttonX, ((sen.surfaceHeight/100)*86), myPaint);
-						
-			//canvas.drawBitmap(bmpAndroid, ((sen.surfaceWidth)-(sen.surfaceWidth/7)), ((sen.surfaceHeight)-(sen.surfaceWidth/7)), myPaint);
 		}
 		
 		// Transition from main menu to single player menu
@@ -636,6 +677,76 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpLevel5, levelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
 			
 			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+			
+			// Level 1
+			if(score1 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
+			}
+			if(score1 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
+			}
+			if(score1 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
+			}
+			
+			// Level 2
+			if(score2 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + ((sen.surfaceWidth/10)*3)), ((sen.surfaceHeight/100)*40), myPaint);
+			}
+			if(score2 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*40), myPaint);
+			}
+			if(score2 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/8)), ((sen.surfaceHeight/100)*40), myPaint);
+			}
+			
+			// Level 3
+			if(score3 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
+			}
+			if(score3 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
+			}
+			if(score3 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
+			}	
+			
+			// Level 4
+			if(score4 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + ((sen.surfaceWidth/10)*3)), ((sen.surfaceHeight/100)*70), myPaint);
+			}
+			if(score4 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*70), myPaint);
+			}
+			if(score4 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/8)), ((sen.surfaceHeight/100)*70), myPaint);
+			}
+			
+			// Level 5
+			if(score5 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
+			}
+			if(score5 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
+			}
+			if(score5 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
+			}
 		}
 		
 		// Transition to game play
@@ -793,8 +904,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpLevel3 = BitmapFactory.decodeResource(getResources(), R.drawable.marble3);		
 		bmpLevel4 = BitmapFactory.decodeResource(getResources(), R.drawable.marble4);		
 		bmpLevel5 = BitmapFactory.decodeResource(getResources(), R.drawable.marble5);	
-		
 		bmpLoading = BitmapFactory.decodeResource(getResources(), R.drawable.loading);
+		
+		bmpStar1 = BitmapFactory.decodeResource(getResources(), R.drawable.target);
+		bmpStar2 = BitmapFactory.decodeResource(getResources(), R.drawable.target2);
+		bmpStar3 = BitmapFactory.decodeResource(getResources(), R.drawable.target3);
 					
 		bmpSingle = resizeImage(bmpSingle, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 		bmpMulti = resizeImage(bmpMulti, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
@@ -808,11 +922,30 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpLevel3 = resizeImage(bmpLevel3, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 		bmpLevel4 = resizeImage(bmpLevel4, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 		bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));	
-		
 		bmpLoading = resizeImage(bmpLoading, (sen.surfaceHeight/5), (sen.surfaceWidth/2));	
-				
+		
 		bmpBorder = resizeImage(bmpBorder, (sen.surfaceWidth/10), (sen.surfaceWidth/10));
 		
+		bmpStar1 = resizeImage(bmpStar1, (sen.surfaceWidth/11), (sen.surfaceWidth/11));
+		bmpStar2 = resizeImage(bmpStar2, (sen.surfaceWidth/11), ((sen.surfaceWidth/11)*2));
+		bmpStar3 = resizeImage(bmpStar3, (sen.surfaceWidth/11), ((sen.surfaceWidth/11)*3));
+		
+		// Check is there is a saved name in memory
+		SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+		// Get the player scores
+	    score1 = app_preferences.getInt("level1", 0);
+	    score2 = app_preferences.getInt("level2", 0);
+	    score3 = app_preferences.getInt("level3", 0);
+	    score4 = app_preferences.getInt("level4", 0);
+	    score5 = app_preferences.getInt("level5", 0);
+	    
+	    Log.d(TAG, "score level 1: " + score1);
+	    Log.d(TAG, "score level 2: " + score2);
+	    Log.d(TAG, "score level 3: " + score3);
+	    Log.d(TAG, "score level 4: " + score4);
+	    Log.d(TAG, "score level 5: " + score5);
+	    
 		return true;
 	}
 
@@ -1045,6 +1178,27 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							player.mapReference = map;
 							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
 						}
+						if(levelSelect == 3)
+						{
+							map = new Map1();
+							player.reset();
+							player.mapReference = map;
+							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+						}
+						if(levelSelect == 4)
+						{
+							map = new Map1();
+							player.reset();
+							player.mapReference = map;
+							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+						}						
+						if(levelSelect == 5)
+						{
+							map = new Map1();
+							player.reset();
+							player.mapReference = map;
+							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+						}
 						
 						loadLevel = 2;
 					}
@@ -1091,12 +1245,27 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					if(loadLevel == 3)
 					{
 						stage = 6;	
+						score = 0;
 						player.reset();
 					}
 				}
 				
-				if(stage == 7)
+				if(stage == 6)
 				{
+					score++;
+					
+					try 
+					{
+						Thread.sleep(980);
+					} 
+					catch (Exception e)
+					{
+						Log.d(TAG, "Thread sleep fail");
+					}					
+				}
+				
+				if(stage == 7)
+				{					
 					if(plevelButtonX < levelButtonX)
 					{			
 						//TODO: "Level" button
@@ -1106,6 +1275,62 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 					else
 					{
+						Log.d(TAG, "Score: " + score);
+						
+						// Save player score to the device memory
+                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                      	SharedPreferences.Editor editor = app_preferences.edit();
+
+                      	// Give score
+                      	if(score < 10)
+                      	{
+                      		score = 3;
+                      	}
+                      	else if(score < 20)
+                      	{
+                      		score = 2;
+                      	}
+                      	else if(score < 30)
+                      	{
+                      		score = 1;
+                      	}
+                      	else
+                      	{
+                      		score = 0;
+                      	}
+                      	
+						// Save score
+						if(levelSelect == 1)
+						{
+							score1 = score;
+							editor.putInt("level1", score);
+	                      	editor.commit();     	
+						}
+						else if(levelSelect == 2)
+						{
+							score2 = score;
+							editor.putInt("level2", score);
+	                      	editor.commit();   
+						}
+						else if(levelSelect == 3)
+						{
+							score3 = score;
+							editor.putInt("level3", score);
+	                      	editor.commit();   
+						}
+						else if(levelSelect == 4)
+						{
+							score4 = score;
+							editor.putInt("level4", score);
+	                      	editor.commit();   
+						}
+						else
+						{
+							score5 = score;
+							editor.putInt("level5", score);
+	                      	editor.commit();   
+						}
+						
 						previousX = 9999;
 						previousY = 9999;
 						stage = 4;
