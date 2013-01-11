@@ -121,14 +121,14 @@ class Map1 extends GameMap {
 		Map[2][0] = new Platform(R.drawable.metalstart,2,0);
 		
 		Map[0][1] = new Platform(R.drawable.metalplatform,0,1);
-		Map[0][2] = new Platform(R.drawable.metalplatform,0,2);
-		Map[0][3] = new Platform(R.drawable.metalplatform,0,3);
+		Map[0][2] = new WallsVertical(R.drawable.metalwallsvertical,0,2);
+		Map[0][3] = new WallsVertical(R.drawable.metalwallsvertical,0,3);
 		Map[0][4] = new Platform(R.drawable.metalplatform,0,4);
 		Map[0][5] = new Jump(R.drawable.metaljump,0,5);
 		Map[0][6] = new Platform(R.drawable.metalplatform,0,6);
-		Map[0][7] = new Platform(R.drawable.metalplatform,0,7);
-		Map[0][8] = new Platform(R.drawable.metalplatform,0,8);
-		Map[0][9] = new Platform(R.drawable.metalplatform,0,9);
+		Map[0][7] = new WallsVertical(R.drawable.metalwallsvertical,0,7);
+		Map[0][8] = new WallsVertical(R.drawable.metalwallsvertical,0,8);
+		Map[0][9] = new WallsVertical(R.drawable.metalwallsvertical,0,9);
 		Map[0][10] = new Platform(R.drawable.metalplatform,0,10);
 
 		Map[1][10] = new Platform(R.drawable.metalplatform,1,10);
@@ -156,8 +156,8 @@ class Map1 extends GameMap {
 		Map[4][4] = new Platform(R.drawable.metalplatform,4,4);
 		
 		Map[5][4] = new WallRight(R.drawable.metalwallright,5,4);
-		Map[5][3] = new WallRight(R.drawable.metalwallright,5,3);
-		Map[5][2] = new WallRight(R.drawable.metalwallright,5,2);
+		Map[5][3] = new WallsVertical(R.drawable.metalwallsvertical,5,3);
+		Map[5][2] = new WallsVertical(R.drawable.metalwallsvertical,5,2);
 		Map[5][1] = new WallRight(R.drawable.metalwallright,5,1);
 	
 		Map[4][0] = new PlatformEnd(R.drawable.metalend,4,0);

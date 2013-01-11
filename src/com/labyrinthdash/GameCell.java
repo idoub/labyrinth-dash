@@ -356,6 +356,76 @@ class WallLeft extends GameCell {
 	}
 }
 
+class WallTop extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	
+	public WallTop(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x, this.position.y + 5);
+		P2 = new Vector2D(this.position.x + img.getWidth(), this.position.y + 5);
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		return segmentCollision(P1, P2, player);
+	}
+}
+
+class WallBottom extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	
+	public WallBottom(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x, this.position.y + (img.getHeight() - 5));
+		P2 = new Vector2D(this.position.x + img.getWidth(), this.position.y + (img.getHeight() - 5));
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		return segmentCollision(P1, P2, player);
+	}
+}
+
+class WallsVertical extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	Vector2D P3;
+	Vector2D P4;
+	
+	public WallsVertical(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x + 5, this.position.y);
+		P2 = new Vector2D(this.position.x + 5, this.position.y + img.getHeight());
+		P3 = new Vector2D(this.position.x + (img.getWidth() - 5), this.position.y + img.getHeight());
+		P4 = new Vector2D(this.position.x + (img.getWidth() - 5), this.position.y);
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		boolean r = false;
+		r = segmentCollision(P1, P2, player);
+		r = segmentCollision(P3, P4, player);
+		return r;
+	}
+}
+
 class Jump extends GameCell {
 	
 	public Jump(int png, double newX, double newY)	{
