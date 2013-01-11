@@ -76,6 +76,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	String playerName;
 	GameMap map;
 	int levelSelect = 0;
+	int loadLevel = 0;
 	
 	//Zooming
 	private ScaleGestureDetector mScaleDetector;
@@ -422,6 +423,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						if((touchX < (levelButtonX+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*25))+(sen.surfaceWidth/5)))
 						{
 							sen.vibrate = true;
+							loadLevel = 0;
 							levelSelect = 1;
 							stage = 5;
 							previousStage = 4;
@@ -435,6 +437,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						if((touchX < (levelButtonX2+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*40))+(sen.surfaceWidth/5)))
 						{
 							sen.vibrate = true;
+							loadLevel = 0;
 							levelSelect = 2;
 							stage = 5;
 							previousStage = 4;
@@ -969,24 +972,37 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 				if(stage == 5)
 				{
-					if(levelSelect == 1)
+					// Do animation then load level
+					if(loadLevel == 0)
 					{
-						map = new Map1();
-						player.reset();
-						player.mapReference = map;
-						player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
-					}
-					if(levelSelect == 2)
-					{
-						map = new Map2();
-						player.reset();
-						player.mapReference = map;
-						player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+						loadLevel = 1;
 					}
 					
-					stage = 6;
+					if(loadLevel == 1)
+					{
+						if(levelSelect == 1)
+						{
+							map = new Map1();
+							player.reset();
+							player.mapReference = map;
+							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+						}
+						if(levelSelect == 2)
+						{
+							map = new Map2();
+							player.reset();
+							player.mapReference = map;
+							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+						}
+						
+						loadLevel = 2;
+					}
+					
+					if(loadLevel == 2)
+					{
+						stage = 6;	
+					}
 				}
-				
 				
 				try 
 				{
