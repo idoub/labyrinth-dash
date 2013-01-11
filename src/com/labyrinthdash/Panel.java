@@ -66,6 +66,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	boolean loadImages = true;
 	boolean showPlayerName = true;
 	boolean openMenu = false;
+	boolean multiPlayerChosen = false;
 	Rect src;
 	Rect dst;
 	
@@ -350,6 +351,15 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 								
 								// No choice in partner
 								//new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
+								
+								/*
+								 * 	multiPlayerChosen = true;
+								 	loadLevel = 0;
+									levelSelect = 1;
+									stage = 5;
+									previousStage = 4;
+									Log.d(TAG, "Moving to stage 5");
+								 */
 								
 								Log.d(TAG, "connection process started");
 								
@@ -810,6 +820,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			}
 			canvas.drawBitmap(player.img, (float)(player.position.x - player.img.getWidth()*0.5), (float)(player.position.y - player.img.getHeight()*0.5), myPaint);
 		
+			if(multiPlayerChosen == true)
+			{
+				canvas.drawBitmap(player.img, sen.receiveX, sen.receiveY, myPaint);
+			}
+			
 			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
 			
 			if(player.finshed) {
@@ -1276,7 +1291,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				{					
 					if(plevelButtonX < levelButtonX)
 					{			
-						//TODO: "Level" button
 						plevelButtonX += (sen.surfaceWidth/10);
 						plevelButtonX2 += (sen.surfaceWidth/10);
 						pbackButtonX += (sen.surfaceWidth/10);
@@ -1386,6 +1400,9 @@ class sen
 	
 	public static int surfaceWidth = 0;
 	public static int surfaceHeight = 0;
+	
+	public static int receiveX = 0;
+	public static int receiveY = 0;
 	
 	public static boolean endThread = false;
 }
