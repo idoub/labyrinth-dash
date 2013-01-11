@@ -122,9 +122,12 @@ class receivePos extends Thread
 		    tempPosY = (surfaceWidth * tempPosY) / surfaceHeight2;
 		        
 		    //Log.d(TAG, "Translated (x,y): (" + tempPosX + "," + tempPosY + ")");
-		      					                    
-		    player.setX(tempPosX);
-		    player.setY(tempPosY);
+		      					 
+		    sen.receiveX = tempPosX;
+		    sen.receiveY = tempPosY;
+		    
+		    // player.setX(tempPosX);
+		    //player.setY(tempPosY);
 		        
 			try
 			{
