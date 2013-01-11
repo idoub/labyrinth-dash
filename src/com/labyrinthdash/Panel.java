@@ -48,7 +48,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int stage, previousStage = 0;
 	int countDown1, countDown2, countDown3 = 0;
 	int score1, score2, score3, score4, score5;
-	int asteroidX, asteroidY = 0;
+	int asteroidX, asteroidY = -10;
 	
 	// Bitmaps
 	Bitmap bmpBackground;
@@ -56,7 +56,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	Bitmap bmpSingle, bmpMulti;
 	Bitmap bmpHelp, bmpAbout;
 	Bitmap bmpOriginalLogo, bmpLogo;
-	Bitmap bmpBackButtonLeft, bmpBorder, bmpLoading;
+	Bitmap bmpBackButtonLeft, bmpBorder, bmpLoading, bmpLevels;
 	Bitmap bmpLevel1, bmpLevel2, bmpLevel3, bmpLevel4, bmpLevel5;
 	Bitmap bmpStar1, bmpStar2, bmpStar3, bmpAsteroid;
 	
@@ -664,6 +664,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			
 			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
 			
+			canvas.drawBitmap(bmpLevels, ((sen.surfaceWidth/2)-(sen.surfaceWidth/4)), (sen.surfaceHeight/16) , myPaint);
+			
 			// Level 1
 			if(score1 == 1)
 			{
@@ -890,6 +892,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpLevel4 = BitmapFactory.decodeResource(getResources(), R.drawable.marble4);		
 		bmpLevel5 = BitmapFactory.decodeResource(getResources(), R.drawable.marble5);	
 		bmpLoading = BitmapFactory.decodeResource(getResources(), R.drawable.loading);
+		bmpLevels = BitmapFactory.decodeResource(getResources(), R.drawable.levels);
 		
 		bmpStar1 = BitmapFactory.decodeResource(getResources(), R.drawable.target);
 		bmpStar2 = BitmapFactory.decodeResource(getResources(), R.drawable.target2);
@@ -908,6 +911,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpLevel4 = resizeImage(bmpLevel4, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 		bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));	
 		bmpLoading = resizeImage(bmpLoading, (sen.surfaceHeight/5), (sen.surfaceWidth/2));	
+		bmpLevels = resizeImage(bmpLevels, (sen.surfaceHeight/10), (sen.surfaceWidth/2));
 		
 		bmpBorder = resizeImage(bmpBorder, (sen.surfaceWidth/10), (sen.surfaceWidth/10));
 		
