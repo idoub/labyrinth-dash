@@ -1217,7 +1217,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						}						
 						if(levelSelect == 5)
 						{
-							map = new Map1();
+							map = new Map5();
 							player.reset();
 							player.mapReference = map;
 							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
@@ -1308,15 +1308,15 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
                       	SharedPreferences.Editor editor = app_preferences.edit();
 
                       	// Give score
-                      	if(score < 20)
+                      	if(score < 15)
                       	{
                       		score = 3;
                       	}
-                      	else if(score < 30)
+                      	else if(score < 20)
                       	{
                       		score = 2;
                       	}
-                      	else if(score < 40)
+                      	else if(score < 25)
                       	{
                       		score = 1;
                       	}

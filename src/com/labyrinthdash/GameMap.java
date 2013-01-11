@@ -212,3 +212,66 @@ class Map2 extends GameMap {
 		startCell = Map[2][0];
 	}
 }
+
+class Map5 extends GameMap {
+	public Map5() {
+		constructMap();
+		Log.i("INFO", "New map created");
+	}
+	
+	public Map5(int r, int c) {
+		rows = r;
+		columns = c;
+		constructMap();
+		Log.i("INFO", "New map created");
+	}
+	
+	private void constructMap() {
+		//makeBackground(R.drawable.galaxy);
+		Map = new GameCell[columns][rows];
+
+		for(int i=0; i<columns; i++) {
+			for(int j=0; j<rows; j++) {
+				Map[i][j] = new EmptyCell(R.drawable.spaceblack,i,j);
+			}
+		}
+
+		for(int i = 1; i < 5; i++)
+		{
+			for(int j = 1; j < 10; j++)
+			{
+				Map[i][j] = new Platform(R.drawable.metalplatform,i,j);
+			}
+		}
+	
+		for(int j = 1; j < 10; j++)
+		{
+			Map[0][j] = new WallLeft(R.drawable.metalwallleft,0,j);
+		}
+		for(int j = 1; j < 10; j++)
+		{
+			Map[5][j] = new WallRight(R.drawable.metalwallright,5,j);
+		}
+		
+		for(int i = 1; i < 5; i++)
+		{
+			Map[i][0] = new WallTop(R.drawable.metalwalltop, i, 0);
+		}
+		
+		for(int i = 1; i < 5; i++)
+		{
+			Map[i][10] = new WallBottom(R.drawable.metalwallbottom, i, 10);
+		}
+		
+		Map[0][0] = new WallsTopLeft(R.drawable.metalwallstl, 0, 0);
+		Map[5][9] = new WallsBottomRight(R.drawable.metalwallsbr, 5, 9);
+		
+		Map[0][9] = new WallsBottomLeft(R.drawable.metalwallsbl, 0, 9);
+		Map[5][0] = new WallsTopRight(R.drawable.metalwallstr, 5, 0);
+		
+		Map[4][9] = new PlatformEnd(R.drawable.metalend,4,9);	
+		
+		startCell = Map[1][1];
+	}
+}
+
