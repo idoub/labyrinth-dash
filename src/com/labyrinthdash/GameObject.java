@@ -51,7 +51,7 @@ public class GameObject
 	 * Attaches an image to the object.
 	 * @param png
 	 */
-	protected void makeImage(int png) {
+	public void makeImage(int png) {
 		Context context = Game.getContext();
 		
 		Resources res = context.getResources();

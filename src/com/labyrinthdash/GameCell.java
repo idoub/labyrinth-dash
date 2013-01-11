@@ -1,8 +1,6 @@
 package com.labyrinthdash;
 
-import android.app.AlertDialog;
 import android.graphics.Bitmap;
-import android.widget.Toast;
 
 /**
  * GameCell is the parent class for all map cells in the game. It's primary
@@ -31,8 +29,8 @@ public abstract class GameCell extends GameObject {
 	/** Point of intersection between player and segment. */
 	private Vector2D intersectionPoint;
 	
-	/** Whether the current cell supports the player or not */
-	public boolean support = true;
+	/** Whether the player can fall through this cell or not. */
+	protected boolean held = false;
 	
 	/**
 	 * GameCell constructor. Takes the cell image and creates a GameObject with
@@ -150,7 +148,6 @@ class EmptyCell extends GameCell {
 	public EmptyCell(int png, double newX, double newY) {
 		super(png);
 		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-		support = false;
 	}
 
 	/**
@@ -161,16 +158,15 @@ class EmptyCell extends GameCell {
 	 */
 	@Override
 	protected void react(GamePlayer player) {
-		if(!player.jumping) {
-			if(player.img.getHeight() > 5) {
-				player.velocity.zero();
-				player.img = Bitmap.createScaledBitmap(player.img, (int)(player.img.getWidth()*0.75), (int)(player.img.getHeight()*0.75), false);
-			} else {
-				player.makeImage(R.drawable.marble);
-				player.velocity = new Vector2D();
-				player.position = player.lastCell.position.add(player.lastCell.width/2, player.lastCell.height/2);
-				player.penalty++;
-			}
+		// TODO: Animate fall, then reset
+		if(player.img.getHeight() > 5) {
+			held = true;
+			player.img = Bitmap.createScaledBitmap(player.img, (int)(player.img.getWidth()*0.75), (int)(player.img.getHeight()*0.75), false);
+		} else {
+			held = false;
+			player.makeImage(R.drawable.marble);
+			player.velocity = new Vector2D();
+			player.position = player.lastCell.position.add(player.lastCell.width/2, player.lastCell.height/2);
 		}
 	}
 
@@ -202,6 +198,7 @@ class Platform extends GameCell {
 	public Platform(int png, double newX, double newY) {
 		super(png);
 		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		held = false;
 	}
 
 	/**
@@ -223,115 +220,24 @@ class Platform extends GameCell {
 
 }
 
-class PlatformEnd extends GameCell {
+class MetalBoostRight extends GameCell {
 	
-	public PlatformEnd(int png, double newX, double newY) {
+	public MetalBoostRight(int png, double newX, double newY) {
 		super(png);
 		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		held = false;
 	}
 
 	@Override
 	protected void react(GamePlayer player) {
-		if(!player.jumping) {
-			player.finshed = true;
-			player.velocity.zero();
-		}
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	protected boolean checkCollision(GamePlayer player) {
-		return false;
-	}
-}
-
-class BoostRight extends GameCell {
-	
-	public BoostRight(int png, double newX, double newY) {
-		super(png);
-		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-	}
-
-	@Override
-	protected void react(GamePlayer player) {
-		player.velocity = new Vector2D(10, 0);
-	}
-
-	@Override
-	protected boolean checkCollision(GamePlayer player) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 	
 }
-
-class BoostLeft extends GameCell {
-	public BoostLeft(int png, double newX, double newY) {
-		super(png);
-		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-	}
-
-	@Override
-	protected void react(GamePlayer player) {
-		player.velocity = new Vector2D(-10, 0);
-	}
-
-	@Override
-	protected boolean checkCollision(GamePlayer player) {
-		return false;
-	}
-}
-
-class BoostDown extends GameCell {
-	public BoostDown(int png, double newX, double newY) {
-		super(png);
-		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-	}
-
-	@Override
-	protected void react(GamePlayer player) {
-		player.velocity = new Vector2D(0, 10);
-	}
-
-	@Override
-	protected boolean checkCollision(GamePlayer player) {
-		return false;
-	}
-}
-
-class BoostUp extends GameCell {
-	public BoostUp(int png, double newX, double newY) {
-		super(png);
-		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-	}
-
-	@Override
-	protected void react(GamePlayer player) {
-		player.velocity = new Vector2D(0, -10);
-	}
-
-	@Override
-	protected boolean checkCollision(GamePlayer player) {
-		return false;
-	}
-}
-
-class Jump extends GameCell {
-	
-	public Jump(int png, double newX, double newY)	{
-		super(png);
-		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
-	}
-
-	@Override
-	protected void react(GamePlayer player) {
-		if(!player.jumping) {
-			player.jumping = true;
-			player.jumpLength = 20;
-			player.apex = 0;
-		}
-	}
-
-	@Override
-	protected boolean checkCollision(GamePlayer player) {
-		return false;
-	}
-}	
