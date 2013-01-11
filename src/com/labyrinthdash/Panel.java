@@ -110,7 +110,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 		// Adjust zoom level to DPI
 		dm = getResources().getDisplayMetrics().densityDpi;
-		switch(dm){
+		/*switch(dm){
 	     case DisplayMetrics.DENSITY_LOW:
 	    	 mScaleFactor = 1f;
 	         break;
@@ -123,7 +123,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	     case DisplayMetrics.DENSITY_XHIGH:
 	    	 mScaleFactor = 1.5f;
 	    	 break;
-		}
+		}*/
 		
 		// Prepare Dialogs
 		multiplayDialog = new AlertDialog.Builder(getContext());
