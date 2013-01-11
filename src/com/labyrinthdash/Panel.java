@@ -1297,22 +1297,26 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 					else
 					{
-						Log.d(TAG, "Score: " + score);
+						Log.d(TAG, "Score: " + score + " before penalty");
+						
+						score += player.penalty;
+						
+						Log.d(TAG, "Score: " + score + " after penalty");						
 						
 						// Save player score to the device memory
                       	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                       	SharedPreferences.Editor editor = app_preferences.edit();
 
                       	// Give score
-                      	if(score < 10)
+                      	if(score < 20)
                       	{
                       		score = 3;
                       	}
-                      	else if(score < 20)
+                      	else if(score < 30)
                       	{
                       		score = 2;
                       	}
-                      	else if(score < 30)
+                      	else if(score < 40)
                       	{
                       		score = 1;
                       	}
