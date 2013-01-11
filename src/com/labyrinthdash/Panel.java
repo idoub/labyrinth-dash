@@ -2,7 +2,6 @@ package com.labyrinthdash;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +46,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int previousX, previousY = 0;
 	int stage, previousStage = 0;
 	int countDown1, countDown2, countDown3 = 0;
+	int score1, score2, score3, score4, score5;
 	
 	// Bitmaps
 	Bitmap bmpBackground, bmpAndroid;
@@ -79,6 +79,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	GameMap map;
 	int levelSelect = 0;
 	int loadLevel = 0;
+	int score = 0;
 	
 	//Zooming
 	private ScaleGestureDetector mScaleDetector;
@@ -251,7 +252,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				if((touchY > (sen.surfaceHeight/2)) && (touchY < ((sen.surfaceHeight/2)+(sen.surfaceHeight/10))) )
 				{
 					// Check is there is a saved name in memory
-					 SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+					SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 					// Get the player name
 				    playerName = app_preferences.getString("playerName", "noName");
@@ -813,6 +814,22 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				
 		bmpBorder = resizeImage(bmpBorder, (sen.surfaceWidth/10), (sen.surfaceWidth/10));
 		
+		// Check is there is a saved name in memory
+		SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+		// Get the player scores
+	    score1 = app_preferences.getInt("level1", 0);
+	    score2 = app_preferences.getInt("level2", 0);
+	    score3 = app_preferences.getInt("level3", 0);
+	    score4 = app_preferences.getInt("level4", 0);
+	    score5 = app_preferences.getInt("level5", 0);
+	    
+	    Log.d(TAG, "score level 1: " + score1);
+	    Log.d(TAG, "score level 2: " + score2);
+	    Log.d(TAG, "score level 3: " + score3);
+	    Log.d(TAG, "score level 4: " + score4);
+	    Log.d(TAG, "score level 5: " + score5);
+	    
 		return true;
 	}
 
@@ -1091,12 +1108,27 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					if(loadLevel == 3)
 					{
 						stage = 6;	
+						score = 0;
 						player.reset();
 					}
 				}
 				
-				if(stage == 7)
+				if(stage == 6)
 				{
+					score++;
+					
+					try 
+					{
+						Thread.sleep(980);
+					} 
+					catch (Exception e)
+					{
+						Log.d(TAG, "Thread sleep fail");
+					}					
+				}
+				
+				if(stage == 7)
+				{					
 					if(plevelButtonX < levelButtonX)
 					{			
 						//TODO: "Level" button
@@ -1106,6 +1138,57 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 					else
 					{
+						Log.d(TAG, "Score: " + score);
+						
+						// Save player score to the device memory
+                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                      	SharedPreferences.Editor editor = app_preferences.edit();
+
+                      	// Give score
+                      	if(score < 10)
+                      	{
+                      		score = 3;
+                      	}
+                      	else if(score < 20)
+                      	{
+                      		score = 2;
+                      	}
+                      	else if(score < 30)
+                      	{
+                      		score = 1;
+                      	}
+                      	else
+                      	{
+                      		score = 0;
+                      	}
+                      	
+						// Save score
+						if(levelSelect == 1)
+						{
+							editor.putInt("level1", score);
+	                      	editor.commit();     	
+						}
+						else if(levelSelect == 2)
+						{
+							editor.putInt("level2", score);
+	                      	editor.commit();   
+						}
+						else if(levelSelect == 3)
+						{
+							editor.putInt("level3", score);
+	                      	editor.commit();   
+						}
+						else if(levelSelect == 4)
+						{
+							editor.putInt("level4", score);
+	                      	editor.commit();   
+						}
+						else
+						{
+							editor.putInt("level5", score);
+	                      	editor.commit();   
+						}
+						
 						previousX = 9999;
 						previousY = 9999;
 						stage = 4;
