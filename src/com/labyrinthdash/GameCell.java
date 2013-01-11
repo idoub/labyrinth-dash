@@ -231,8 +231,10 @@ class PlatformEnd extends GameCell {
 
 	@Override
 	protected void react(GamePlayer player) {
-		player.finshed = true;
-		player.velocity.zero();
+		if(!player.jumping) {
+			player.finshed = true;
+			player.velocity.zero();
+		}
 	}
 
 	@Override

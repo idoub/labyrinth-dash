@@ -54,6 +54,7 @@ public class Vector2D {
 		return "(" + x + "," + y + ")";
 	}
 	
+	/** Zero's the vector. Useful for stopping velocity. */
 	public void zero() {
 		this.x = 0;
 		this.y = 0;

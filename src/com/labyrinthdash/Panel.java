@@ -420,6 +420,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							sen.vibrate = true;
 							
 							map = new Map1();
+							player.reset();
 							player.mapReference = map;
 							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
 							stage = 5;
@@ -436,6 +437,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							sen.vibrate = true;
 							
 							map = new Map2();
+							player.reset();
 							player.mapReference = map;
 							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
 							stage = 5;
@@ -675,6 +677,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(player.img, (float)(player.position.x - player.img.getWidth()*0.5), (float)(player.position.y - player.img.getHeight()*0.5), myPaint);
 		
 			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
+			
+			if(player.finshed) {
+				stage = 4;
+			}
 		}		
 		
 		canvas.restore();

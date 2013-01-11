@@ -30,13 +30,13 @@ public class GamePlayer extends GameObject
 	public GameCell lastCell = currentCell;
 	
 	/** Whether the player is currently in the air */
-	public boolean jumping;
+	public boolean jumping = false;
 	/** How many frames the jump should last for */
 	public int jumpLength = 0;
 	/** The highest point of the jump */
 	public int apex = 0;
 	/** If the player has finished the map */
-	public boolean finshed;
+	public boolean finshed = false;
 	
 	/**
 	 * Creates the player by calling the parent constructor of GameObject and
@@ -108,7 +108,6 @@ public class GamePlayer extends GameObject
 				}
 				currentCell = mapReference.getCellContaining(position);
 			}
-			//if(currentCell.space) fall();
 			currentCell.react(this);
 			// If the cell doesn't hold the player go to next position
 			position = position.add(velocity);
@@ -143,9 +142,9 @@ public class GamePlayer extends GameObject
 	 * collision with the edge of the screen.
 	 */
 	private void checkCollision() {
-		/*boolean hasCollided = false;
-		for(GameCell cell : GameMap.getCellsInProximity(nextPosition)) {
-			if(cell.hasCollided(this)) {
+		boolean hasCollided = false;
+		for(GameCell cell : mapReference.getCellsInProximity(nextPosition)) {
+			if(cell.checkCollision(this)) {
 				hasCollided = true;
 			}
 			if(hasCollided)	break;
@@ -164,7 +163,7 @@ public class GamePlayer extends GameObject
 			double v_dot_n = velocity.dot(collisionNormal);
             Vector2D twoN_v_dot_n = collisionNormal.mul(2).mul(v_dot_n);
             velocity = (velocity.sub(twoN_v_dot_n.mul(0.8)));				// 0.8 is loss of momentum on collision
-		}*/
+		}
 		
     	timeOfCollision = Double.MAX_VALUE;									// Reset the soonest collision time
     	lastCollision = null;												// Reset the point of collision
@@ -185,5 +184,21 @@ public class GamePlayer extends GameObject
 			position.y = this.height*0.5;									// Set the position against the edge - eliminates jitter
             velocity.y = (velocity.y * 0.8);
 		}
+	}
+	
+	public void reset() {
+		velocity = new Vector2D();
+		nextPosition = new Vector2D();
+		lastCollision = null;
+		radius = img.getWidth() * 0.5;
+		timeOfCollision = Double.MAX_VALUE;
+		nextPosition = new Vector2D();
+		lastCollision = new Vector2D();
+		timeOfCollision = 0.0;
+		lastCell = currentCell;
+		jumping = false;
+		jumpLength = 0;
+		apex = 0;
+		finshed = false;
 	}
 }
