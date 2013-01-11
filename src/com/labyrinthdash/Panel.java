@@ -46,6 +46,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int touchX, touchY = 0;
 	int previousX, previousY = 0;
 	int stage, previousStage = 0;
+	int countDown1, countDown2, countDown3 = 0;
 	
 	// Bitmaps
 	Bitmap bmpBackground, bmpAndroid;
@@ -53,7 +54,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	Bitmap bmpSingle, bmpMulti;
 	Bitmap bmpHelp, bmpAbout;
 	Bitmap bmpOriginalLogo, bmpLogo;
-	Bitmap bmpBackButtonLeft, bmpBorder;
+	Bitmap bmpBackButtonLeft, bmpBorder, bmpLoading;
 	Bitmap bmpLevel1, bmpLevel2, bmpLevel3, bmpLevel4, bmpLevel5;
 	
 	boolean scaleImages = true;
@@ -69,6 +70,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int leftPanel, rightPanel = 0;
 	int logoY, logoX, logoSize = 0;
 	int buttonX, levelButtonX, levelButtonX2, backButtonX = 0;
+	int plevelButtonX, plevelButtonX2, pbackButtonX = 0;
 	boolean initialMove = true;
 	
 	// Player object
@@ -447,6 +449,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 
 					//Level 3 button
 					
+					// For transition
+					pbackButtonX = backButtonX;
+					plevelButtonX = levelButtonX;
+					plevelButtonX2 = levelButtonX2;
+					
+					countDown1 = countDown2 = countDown3 = 10000;
 				}
 				previousStage = 4;
 			}
@@ -630,8 +638,28 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
 		}
 		
+		// Transition to game play
+		if(stage == 5)
+		{
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			
+			canvas.drawBitmap(bmpLevel1, plevelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
+			canvas.drawBitmap(bmpLevel2, plevelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
+			canvas.drawBitmap(bmpLevel3, plevelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
+			canvas.drawBitmap(bmpLevel4, plevelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel5, plevelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
+			
+			canvas.drawBitmap(bmpBackButtonLeft, pbackButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+			
+			canvas.drawBitmap(bmpLoading, (plevelButtonX + sen.surfaceWidth), (sen.surfaceHeight/6), myPaint);
+			
+			canvas.drawBitmap(bmpLevel3, countDown1, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel2, countDown2, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel1, countDown3, ((sen.surfaceHeight/100)*70), myPaint);
+		}
+		
 		// Draw menu boundary platforms 
-		if((stage == 2) || (stage == 3) || (stage == 4))
+		if((stage == 2) || (stage == 3) || (stage == 4) || (stage == 5))
 		{
 			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
 			{
@@ -652,11 +680,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			{
 				canvas.drawBitmap(bmpBorder, i, (sen.surfaceHeight-(sen.surfaceWidth/20)), myPaint);
 			}
-		}
-		
-		if(stage == 5)
-		{
-			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
 		}		
 		
 		// Game play
@@ -755,7 +778,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpLevel2 = BitmapFactory.decodeResource(getResources(), R.drawable.marble2);		
 		bmpLevel3 = BitmapFactory.decodeResource(getResources(), R.drawable.marble3);		
 		bmpLevel4 = BitmapFactory.decodeResource(getResources(), R.drawable.marble4);		
-		bmpLevel5 = BitmapFactory.decodeResource(getResources(), R.drawable.marble5);		
+		bmpLevel5 = BitmapFactory.decodeResource(getResources(), R.drawable.marble5);	
+		
+		bmpLoading = BitmapFactory.decodeResource(getResources(), R.drawable.loading);
 					
 		bmpSingle = resizeImage(bmpSingle, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 		bmpMulti = resizeImage(bmpMulti, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
@@ -769,6 +794,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpLevel3 = resizeImage(bmpLevel3, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 		bmpLevel4 = resizeImage(bmpLevel4, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 		bmpLevel5 = resizeImage(bmpLevel5, (sen.surfaceWidth/5), (sen.surfaceWidth/5));	
+		
+		bmpLoading = resizeImage(bmpLoading, (sen.surfaceHeight/5), (sen.surfaceWidth/2));	
 				
 		bmpBorder = resizeImage(bmpBorder, (sen.surfaceWidth/10), (sen.surfaceWidth/10));
 		
@@ -975,7 +1002,17 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					// Do animation then load level
 					if(loadLevel == 0)
 					{
-						loadLevel = 1;
+						if(plevelButtonX >= ((sen.surfaceWidth/4)-(sen.surfaceWidth)))
+						{			
+							//TODO: "Level" button
+							plevelButtonX -= (sen.surfaceWidth/10);
+							plevelButtonX2 -= (sen.surfaceWidth/10);
+							pbackButtonX -= (sen.surfaceWidth/10);
+						}
+						else
+						{
+							loadLevel = 1;
+						}
 					}
 					
 					if(loadLevel == 1)
@@ -1000,7 +1037,47 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					
 					if(loadLevel == 2)
 					{
+						//Animation
+						countDown1 = sen.surfaceWidth/8;
+						
+						try 
+						{
+							Thread.sleep(400);
+						} 
+						catch (Exception e)
+						{
+							Log.d(TAG, "Thread sleep fail");
+						}
+						
+						countDown2 = ((sen.surfaceWidth/8)*3);
+						
+						try 
+						{
+							Thread.sleep(400);
+						} 
+						catch (Exception e)
+						{
+							Log.d(TAG, "Thread sleep fail");
+						}
+						
+						countDown3 = ((sen.surfaceWidth/8)*5);
+						
+						try 
+						{
+							Thread.sleep(400);
+						} 
+						catch (Exception e)
+						{
+							Log.d(TAG, "Thread sleep fail");
+						}
+						
+						loadLevel = 3;
+					}
+			
+					if(loadLevel == 3)
+					{
 						stage = 6;	
+						player.reset();
 					}
 				}
 				
