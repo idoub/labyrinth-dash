@@ -325,7 +325,7 @@ class Jump extends GameCell {
 	protected void react(GamePlayer player) {
 		if(!player.jumping) {
 			player.jumping = true;
-			player.jumpLength = 20;
+			player.jumpLength = 16;
 			player.apex = 0;
 		}
 	}

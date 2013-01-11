@@ -1,7 +1,12 @@
 package com.labyrinthdash;
 
 import com.labyrinthdash.R;
+
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,6 +20,11 @@ public class GamePlayer extends GameObject
 {
 	/** A reference to the map */
 	public GameMap mapReference;
+	/** A larger image used for the jump animation */
+	public Bitmap largerImage;
+	/** Original image size for jump animation */
+	public int originalSize;
+	
 	/** Velocity of the player */
 	public Vector2D velocity;
 	/** Position of the player in next frame if the current velocity is added */
@@ -50,11 +60,21 @@ public class GamePlayer extends GameObject
 	 */
 	public GamePlayer(int png) {
 		super(png);
+		originalSize = img.getHeight();
 		velocity = new Vector2D();
 		nextPosition = new Vector2D();
 		lastCollision = null;
 		radius = img.getWidth() * 0.5;
 		timeOfCollision = Double.MAX_VALUE;
+		
+		Context context = Game.getContext();
+		
+		Resources res = context.getResources();
+		DisplayMetrics metrics = new DisplayMetrics();
+		
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inDensity = metrics.densityDpi;
+		largerImage = BitmapFactory.decodeResource(res, R.drawable.marblelarge, o);
 	}
 	
 	/** X position setter */
@@ -98,10 +118,12 @@ public class GamePlayer extends GameObject
 		try {
 			Vector2D acceleration = new Vector2D(accelX, accelY);
 			// Adjust velocity of the ball according to slope
-			if (!jumping)
+			if (!jumping) {
 				velocity = velocity.add(acceleration);
-			else
+			} else {
 				jump();
+				velocity = velocity.add(acceleration.mul(0.2));
+			}
 			// Find what it's next position would be
 			nextPosition = position.add(velocity);
 			// Check if it would intersect or collide at that position
@@ -126,12 +148,13 @@ public class GamePlayer extends GameObject
 		
 		if(jumpLength == 0) {
 			jumping = false;
+			this.makeImage(R.drawable.marble);
 		} else if(apex < jumpLength) {
 			apex++;
-			img = Bitmap.createScaledBitmap(img, (int)(img.getWidth()*1.05), (int)(img.getHeight()*1.05), false);			
+			img = Bitmap.createScaledBitmap(largerImage, (int)(originalSize + 2 * apex), (int)(originalSize + 2 * apex), false);			
 		} else {
 			jumpLength--;
-			img = Bitmap.createScaledBitmap(img, (int)(img.getWidth()*0.95), (int)(img.getHeight()*0.95), false);
+			img = Bitmap.createScaledBitmap(largerImage, (int)(originalSize + 2 * jumpLength), (int)(originalSize + 2 * jumpLength), false);
 		}
 	}
 	
