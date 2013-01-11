@@ -74,8 +74,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	// Player object
 	GamePlayer player;
 	String playerName;
-	
 	GameMap map;
+	int levelSelect = 0;
 	
 	//Zooming
 	private ScaleGestureDetector mScaleDetector;
@@ -125,7 +125,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		// Prepare Dialogs
 		multiplayDialog = new AlertDialog.Builder(getContext());
 		multiplayDialog.setTitle("Info");
-		multiplayDialog.setMessage("Multiplayer is currently unavailable");
+		multiplayDialog.setMessage("Server is down: Multiplayer is currently unavailable\n\nWill be enabled for demonstration :)\n");
 		multiplayDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               // Canceled.
@@ -348,13 +348,17 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							sen.vibrate = true;
 							multiplayDialog.show();
 							
-							Log.d(TAG, "about to start connection");
-							
-							// No choice in partner
-							//new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
-							
-							Log.d(TAG, "connection process started");
-							
+							if(multiConnect == true)
+							{
+								Log.d(TAG, "about to start connection");
+								
+								// No choice in partner
+								//new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
+								
+								Log.d(TAG, "connection process started");
+								
+								multiConnect = false;
+							}							
 							openMenu = true;
 						}
 					}
@@ -418,11 +422,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						if((touchX < (levelButtonX+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*25))+(sen.surfaceWidth/5)))
 						{
 							sen.vibrate = true;
-							
-							map = new Map1();
-							player.reset();
-							player.mapReference = map;
-							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+							levelSelect = 1;
 							stage = 5;
 							previousStage = 4;
 							Log.d(TAG, "Moving to stage 5");
@@ -435,24 +435,25 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						if((touchX < (levelButtonX2+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*40))+(sen.surfaceWidth/5)))
 						{
 							sen.vibrate = true;
-							
-							map = new Map2();
-							player.reset();
-							player.mapReference = map;
-							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+							levelSelect = 2;
 							stage = 5;
 							previousStage = 4;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
-					
-					// Level 3 button
+
+					//Level 3 button
 					
 				}
 				previousStage = 4;
 			}
 			
 			if(stage == 5)
+			{
+				//stage = 6;
+			}
+			
+			if(stage == 6)
 			{
 				if((touchX < (sen.surfaceWidth/8)) && (touchY < (sen.surfaceWidth/8)))
 				{
@@ -479,16 +480,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	{		
 		src = new Rect(0, 0, 610, 458);
 		dst = new Rect(0, 0, sen.surfaceWidth, sen.surfaceHeight);
-		
-		/*if(multiConnect == true)
-		{
-			Log.d(TAG, "about to start connection");
-			
-			// No choice in partner
-			new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
-			
-			Log.d(TAG, "connection process started");
-		}*/
 	}
 	
 		
@@ -538,11 +529,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		{
 			if(logoX > (sen.surfaceWidth/12))
 			{
-				logoX--;
+				logoX-=2;
 			}
 			if(logoSize < (sen.surfaceWidth)-(sen.surfaceWidth/6))
 			{
-				logoSize += 2;
+				logoSize += 4;
 				bmpLogo = resizeImage(bmpOriginalLogo, (sen.surfaceHeight/4), logoSize);
 			}
 			
@@ -660,9 +651,13 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			}
 		}
 		
+		if(stage == 5)
+		{
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+		}		
 		
 		// Game play
-		if(stage == 5)
+		if(stage == 6)
 		{			
 			// Zooming in or out
 			canvas.scale(mScaleFactor, mScaleFactor, (float)player.getX(), (float)player.getY());
@@ -867,11 +862,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							
 				if(stage == 0)
 				{										
-					if((logoX == sen.surfaceWidth/12) && (logoSize == (sen.surfaceWidth)-(sen.surfaceWidth/6)))
+					if((logoX <= sen.surfaceWidth/12) && (logoSize >= (sen.surfaceWidth)-(sen.surfaceWidth/6)))
 					{
 						try 
 						{
-							Thread.sleep(200);
+							Thread.sleep(5);
 						} 
 						catch (Exception e)
 						{
@@ -892,7 +887,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						
 						try 
 						{
-							Thread.sleep(200);
+							Thread.sleep(50);
 						} 
 						catch (Exception e)
 						{
@@ -972,6 +967,27 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 				}
 		
+				if(stage == 5)
+				{
+					if(levelSelect == 1)
+					{
+						map = new Map1();
+						player.reset();
+						player.mapReference = map;
+						player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+					}
+					if(levelSelect == 2)
+					{
+						map = new Map2();
+						player.reset();
+						player.mapReference = map;
+						player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+					}
+					
+					stage = 6;
+				}
+				
+				
 				try 
 				{
 					Thread.sleep(20);
