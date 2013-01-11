@@ -688,7 +688,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			// Zooming in or out
 			canvas.scale(mScaleFactor, mScaleFactor, (float)player.getX(), (float)player.getY());
 			
-			canvas.drawBitmap(map.background, 0, 0, myPaint);
+			//canvas.drawBitmap(map.background, 0, 0, myPaint);
 			
 			for(GameCell col[] : map.Map) 
 			{

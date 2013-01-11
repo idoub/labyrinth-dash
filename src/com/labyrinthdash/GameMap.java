@@ -107,12 +107,12 @@ class Map1 extends GameMap {
 	}
 	
 	private void constructMap() {
-		makeBackground(R.drawable.galaxy);
+		//makeBackground(R.drawable.galaxy);
 		Map = new GameCell[columns][rows];
 
 		for(int i=0; i<columns; i++) {
 			for(int j=0; j<rows; j++) {
-				Map[i][j] = new EmptyCell(R.drawable.blank,i,j);
+				Map[i][j] = new EmptyCell(R.drawable.spaceblack,i,j);
 			}
 		}
 
@@ -181,12 +181,12 @@ class Map2 extends GameMap {
 	}
 	
 	private void constructMap() {
-		makeBackground(R.drawable.clouds);
+		//makeBackground(R.drawable.clouds);
 		Map = new GameCell[columns][rows];
 
 		for(int i=0; i<columns; i++) {
 			for(int j=0; j<rows; j++) {
-				Map[i][j] = new EmptyCell(R.drawable.blank,i,j);
+				Map[i][j] = new EmptyCell(R.drawable.spaceblack,i,j);
 			}
 		}
 
