@@ -127,7 +127,7 @@ public class GamePlayer extends GameObject
 			// Find what it's next position would be
 			nextPosition = position.add(velocity);
 			// Check if it would intersect or collide at that position
-			checkCollision();
+			if(!jumping) checkCollision();
 			if (currentCell != mapReference.getCellContaining(position)) {
 				if (currentCell != null) {
 					if (currentCell.support)

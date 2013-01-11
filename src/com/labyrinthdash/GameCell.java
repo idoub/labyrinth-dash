@@ -419,10 +419,142 @@ class WallsVertical extends GameCell {
 
 	@Override
 	protected boolean checkCollision(GamePlayer player) {
-		boolean r = false;
-		r = segmentCollision(P1, P2, player);
-		r = segmentCollision(P3, P4, player);
-		return r;
+		boolean seg1 = segmentCollision(P1, P2, player);
+		boolean seg2 = segmentCollision(P3, P4, player);
+		if(seg1 || seg2) return true;
+		return false;
+	}
+}
+
+class WallsHorizontal extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	Vector2D P3;
+	Vector2D P4;
+	
+	public WallsHorizontal(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x, this.position.y + 5);
+		P2 = new Vector2D(this.position.x + img.getWidth(), this.position.y + 5);
+		P3 = new Vector2D(this.position.x, this.position.y + (img.getHeight() - 5));
+		P4 = new Vector2D(this.position.x + img.getWidth(), this.position.y + (img.getHeight() - 5));
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		boolean seg1 = segmentCollision(P1, P2, player);
+		boolean seg2 = segmentCollision(P3, P4, player);
+		if(seg1 || seg2) return true;
+		return false;
+	}
+}
+
+class WallsBottomLeft extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	Vector2D P3;
+	
+	public WallsBottomLeft(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x + 5, this.position.y);
+		P2 = new Vector2D(this.position.x + 5, this.position.y + (img.getHeight() - 5));
+		P3 = new Vector2D(this.position.x + img.getWidth(), this.position.y + (img.getHeight() - 5));
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		boolean seg1 = segmentCollision(P1, P2, player);
+		boolean seg2 = segmentCollision(P2, P3, player);
+		if(seg1 || seg2) return true;
+		return false;
+	}
+}
+
+class WallsBottomRight extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	Vector2D P3;
+	
+	public WallsBottomRight(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x + (img.getWidth() - 5), this.position.y);
+		P2 = new Vector2D(this.position.x + (img.getWidth() - 5), this.position.y + (img.getHeight() - 5));
+		P3 = new Vector2D(this.position.x, this.position.y + (img.getHeight() - 5));
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		boolean seg1 = segmentCollision(P1, P2, player);
+		boolean seg2 = segmentCollision(P2, P3, player);
+		if(seg1 || seg2) return true;
+		return false;
+	}
+}
+
+class WallsTopLeft extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	Vector2D P3;
+	
+	public WallsTopLeft(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x + 5, this.position.y + img.getHeight());
+		P2 = new Vector2D(this.position.x + 5, this.position.y + 5);
+		P3 = new Vector2D(this.position.x + img.getWidth(), this.position.y + 5);
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		boolean seg1 = segmentCollision(P1, P2, player);
+		boolean seg2 = segmentCollision(P2, P3, player);
+		if(seg1 || seg2) return true;
+		return false;
+	}
+}
+
+class WallsTopRight extends GameCell {
+	Vector2D P1;
+	Vector2D P2;
+	Vector2D P3;
+	
+	public WallsTopRight(int png, double newX, double newY)	{
+		super(png);
+		position = new Vector2D(newX*img.getWidth(), newY*img.getHeight());
+		P1 = new Vector2D(this.position.x , this.position.y + 5);
+		P2 = new Vector2D(this.position.x + (img.getWidth() - 5), this.position.y + 5);
+		P3 = new Vector2D(this.position.x + (img.getWidth() - 5), this.position.y + img.getHeight());
+	}
+
+	@Override
+	protected void react(GamePlayer player) {		
+	}
+
+	@Override
+	protected boolean checkCollision(GamePlayer player) {
+		boolean seg1 = segmentCollision(P1, P2, player);
+		boolean seg2 = segmentCollision(P2, P3, player);
+		if(seg1 || seg2) return true;
+		return false;
 	}
 }
 
