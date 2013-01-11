@@ -39,10 +39,6 @@ public class Game extends Activity implements AccelerometerListener
 	Location location;
 	String locationPos;
 	boolean enableGPS = false;
-	
-	//Menu stuffs
-	AlertDialog.Builder chooseName;
-	AlertDialog.Builder choosePlayer;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) 
@@ -134,73 +130,6 @@ public class Game extends Activity implements AccelerometerListener
         else
         {
         	locationPos = "Location fail";
-        }
-        
-        
-        // Name input
-        chooseName = new AlertDialog.Builder(this);
-
-        chooseName.setTitle("High Score");
-        chooseName.setMessage("Put your name in");        	
-    }
-    
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_main, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-
-            case R.id.name:
-            	// Moved into case switch to prevent crash due to reusing input
-            	 // Set an EditText view to get user input 
-                final EditText input = new EditText(CONTEXT);
-                chooseName.setView(input);
-
-                chooseName.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                  String name = input.getText().toString();
-                  // Do something with value!
-        		  Toast toast = Toast.makeText(CONTEXT, "Your name is " + name, Toast.LENGTH_LONG);
-        		  toast.show();
-                  }
-                });
-
-                chooseName.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int whichButton) {
-                    // Canceled.
-        			Toast toast = Toast.makeText(CONTEXT, "Cancelled", Toast.LENGTH_LONG);
-        			toast.show();
-                  }
-                });
-
-            	chooseName.show();
-                return true;
-            case R.id.player:
-            	// Opponent picker, moved into the case switch so that list of name is not fixed
-                List<String> list = new ArrayList<String>();
-                list.add("Isaac");
-                list.add("Matthew");
-                list.add("Nhat");
-                final CharSequence str[]= list.toArray(new CharSequence[list.size()]);
-                choosePlayer = new AlertDialog.Builder(CONTEXT);
-                
-                choosePlayer.setTitle("Choose Player");
-                choosePlayer.setItems(str, new DialogInterface.OnClickListener() {
-        			
-        			public void onClick(DialogInterface choosePlayer, int which) {
-        				Toast toast = Toast.makeText(CONTEXT, "Playing with " + str[which], Toast.LENGTH_LONG);
-        				toast.show();
-        			}
-        		});
-                choosePlayer.create();
-            	choosePlayer.show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
     

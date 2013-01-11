@@ -192,7 +192,7 @@ public class GamePlayer extends GameObject
 			// Reflect the velocity in direction of Normal
 			double v_dot_n = velocity.dot(collisionNormal);
             Vector2D twoN_v_dot_n = collisionNormal.mul(2).mul(v_dot_n);
-            velocity = (velocity.sub(twoN_v_dot_n.mul(0.8)));				// 0.8 is loss of momentum on collision
+            velocity = (velocity.sub(twoN_v_dot_n.mul(0.6)));				// 0.8 is loss of momentum on collision
 		}
 		
     	timeOfCollision = Double.MAX_VALUE;									// Reset the soonest collision time
