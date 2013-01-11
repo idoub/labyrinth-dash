@@ -115,13 +115,13 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	    	 mScaleFactor = 1f;
 	         break;
 	     case DisplayMetrics.DENSITY_MEDIUM:
-	    	 mScaleFactor = 1.1f;
+	    	 mScaleFactor = 1f;
 	         break;
 	     case DisplayMetrics.DENSITY_HIGH:
-	    	 mScaleFactor = 1.4f;
+	    	 mScaleFactor = 1f;
 	    	 break;
 	     case DisplayMetrics.DENSITY_XHIGH:
-	    	 mScaleFactor = 1.5f;
+	    	 mScaleFactor = 1f;
 	    	 break;
 		}
 		
