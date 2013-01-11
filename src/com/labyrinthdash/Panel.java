@@ -1,6 +1,7 @@
 package com.labyrinthdash;
 
 import java.net.Inet4Address;
+import java.util.Random;
 import java.net.UnknownHostException;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -47,16 +48,17 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int stage, previousStage = 0;
 	int countDown1, countDown2, countDown3 = 0;
 	int score1, score2, score3, score4, score5;
+	int asteroidX, asteroidY = 0;
 	
 	// Bitmaps
-	Bitmap bmpBackground, bmpAndroid;
+	Bitmap bmpBackground;
 	Bitmap bmpMetal1, bmpMetal2;
 	Bitmap bmpSingle, bmpMulti;
 	Bitmap bmpHelp, bmpAbout;
 	Bitmap bmpOriginalLogo, bmpLogo;
 	Bitmap bmpBackButtonLeft, bmpBorder, bmpLoading;
 	Bitmap bmpLevel1, bmpLevel2, bmpLevel3, bmpLevel4, bmpLevel5;
-	Bitmap bmpStar1, bmpStar2, bmpStar3;
+	Bitmap bmpStar1, bmpStar2, bmpStar3, bmpAsteroid;
 	
 	boolean scaleImages = true;
 	boolean scaleInitialImages = true;
@@ -81,6 +83,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	int levelSelect = 0;
 	int loadLevel = 0;
 	int score = 0;
+	Random generator;
 	
 	//Zooming
 	private ScaleGestureDetector mScaleDetector;
@@ -222,18 +225,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			Log.d(TAG, "Invalid press");
 			validPress = false;
 		}
-		
-		/*
-		 *  Test if position is near ball (debug only), allows ball overide movement
-		 */
-		/*if(((touchX - player.position.x) < (player.width*1.5)) && ((touchX - player.position.x) > 0))
-		{
-			if(((touchY - player.position.y) < (player.height*1.5)) && ((touchY - player.position.y) > 0))
-			{
-				player.position.y = touchY - (player.width/2);
-				player.position.x = touchX - (player.height/2);
-			}
-		}*/
 		
 		/*
 		 * If the touch is valid then depending on the current 
@@ -412,15 +403,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				}
 				else
 				{
-					/* TODO
-					 * Isaac, this is where the levels are selected  
-					 * 
-					 * Currently there is only the code for the level 1 button press, however, when
-					 * we have different maps the code will be added to detect presses of the other
-					 * buttons
-					 * 
-					 */
-					
 					// Level 1 button
 					if((touchX > levelButtonX) && (touchY > ((sen.surfaceHeight/100)*25)))
 					{
@@ -489,8 +471,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							previousStage = 4;
 							Log.d(TAG, "Moving to stage 5");
 						}
-					}
-					
+					}		
 					
 					// For transition
 					pbackButtonX = backButtonX;
@@ -535,6 +516,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	{		
 		src = new Rect(0, 0, 610, 458);
 		dst = new Rect(0, 0, sen.surfaceWidth, sen.surfaceHeight);
+		
+		generator = new Random(19580427);
 	}
 	
 	public void resume() 
@@ -638,6 +621,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		if(stage == 2)
 		{						
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);	
+			canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
 			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
 			canvas.drawBitmap(bmpSingle, buttonX, ((sen.surfaceHeight/100)*50), myPaint);
 			canvas.drawBitmap(bmpMulti, buttonX, ((sen.surfaceHeight/100)*62), myPaint);
@@ -650,6 +634,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		if(stage == 3)
 		{			
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
 			
 			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
 			canvas.drawBitmap(bmpSingle, buttonX, ((sen.surfaceHeight/100)*50), myPaint);
@@ -669,6 +654,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		if(stage == 4)
 		{
 			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
 			
 			canvas.drawBitmap(bmpLevel1, levelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
 			canvas.drawBitmap(bmpLevel2, levelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
@@ -782,7 +768,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			
 			canvas.drawBitmap(bmpBackButtonLeft, pbackButtonX, ((sen.surfaceHeight/100)*5), myPaint);
 		}
-		
+			
 		// Draw menu boundary platforms 
 		if((stage == 2) || (stage == 3) || (stage == 4) || (stage == 5) || (stage == 7))
 		{
@@ -897,7 +883,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpHelp = BitmapFactory.decodeResource(getResources(), R.drawable.help_button);
 		bmpAbout = BitmapFactory.decodeResource(getResources(), R.drawable.about_button);		
 		bmpBackButtonLeft = BitmapFactory.decodeResource(getResources(), R.drawable.back_button);
-		bmpAndroid = BitmapFactory.decodeResource(getResources(), R.drawable.android);
 					
 		bmpLevel1 = BitmapFactory.decodeResource(getResources(), R.drawable.marble1);	
 		bmpLevel2 = BitmapFactory.decodeResource(getResources(), R.drawable.marble2);		
@@ -909,13 +894,13 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpStar1 = BitmapFactory.decodeResource(getResources(), R.drawable.target);
 		bmpStar2 = BitmapFactory.decodeResource(getResources(), R.drawable.target2);
 		bmpStar3 = BitmapFactory.decodeResource(getResources(), R.drawable.target3);
+		bmpAsteroid = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid);
 					
 		bmpSingle = resizeImage(bmpSingle, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 		bmpMulti = resizeImage(bmpMulti, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 		bmpHelp = resizeImage(bmpHelp, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 		bmpAbout = resizeImage(bmpAbout, (sen.surfaceHeight/14), (sen.surfaceWidth)-(sen.surfaceWidth/2));
 		bmpBackButtonLeft = resizeImage(bmpBackButtonLeft, (sen.surfaceWidth/8), (sen.surfaceWidth/8));
-		bmpAndroid = resizeImage(bmpAndroid, (sen.surfaceWidth/6), (sen.surfaceWidth/6));
 					
 		bmpLevel1 = resizeImage(bmpLevel1, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 		bmpLevel2 = resizeImage(bmpLevel2, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
@@ -929,6 +914,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		bmpStar1 = resizeImage(bmpStar1, (sen.surfaceWidth/11), (sen.surfaceWidth/11));
 		bmpStar2 = resizeImage(bmpStar2, (sen.surfaceWidth/11), ((sen.surfaceWidth/11)*2));
 		bmpStar3 = resizeImage(bmpStar3, (sen.surfaceWidth/11), ((sen.surfaceWidth/11)*3));
+		bmpAsteroid = resizeImage(bmpAsteroid, (sen.surfaceWidth/5), (sen.surfaceWidth/5));
 		
 		// Check is there is a saved name in memory
 		SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -1142,6 +1128,24 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							stage = 2;
 						}	
 					}
+				}
+				
+				if((stage == 2) || (stage == 3) || (stage == 4))
+				{
+					if(asteroidX < -(sen.surfaceWidth/5) || (asteroidY > sen.surfaceHeight))
+					{
+						asteroidX = ((sen.surfaceWidth/5) + (sen.surfaceWidth));
+						
+						asteroidY = generator.nextInt(sen.surfaceHeight);
+						
+						if(asteroidY > (sen.surfaceHeight-sen.surfaceWidth/5))
+						{
+							asteroidY -= (sen.surfaceHeight/2);
+						}
+					}
+					
+					asteroidX-=2;
+					asteroidY+=2;					
 				}
 		
 				if(stage == 5)
