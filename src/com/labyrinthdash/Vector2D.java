@@ -54,6 +54,11 @@ public class Vector2D {
 		return "(" + x + "," + y + ")";
 	}
 	
+	public void zero() {
+		this.x = 0;
+		this.y = 0;
+	}
+	
 	/**
 	 * Returns a new <code>Vector2D</code> with the specified values added to
 	 * it's X and Y.

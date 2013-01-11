@@ -74,7 +74,7 @@ public class InitialConnect extends Thread
 			Log.d(TAG, "About to try and connect");
 			
 			socket1 = null;
-			socket1 = new Socket("192.168.0.102", 2222);
+			socket1 = new Socket("172.21.206.138", 22);
 			
 		    if(socket1 == null)
 		    {
@@ -274,7 +274,7 @@ public class InitialConnect extends Thread
 				Log.d(TAG, "Master UDP packet created");
 				
 				// Start communication threads
-				//new sendPos(player1, socket4, packet, buf, true).start();
+				new sendPos(player1, socket4, packet, buf, true).start();
 				
 				new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
 				
@@ -293,7 +293,7 @@ public class InitialConnect extends Thread
 				Log.d(TAG, "Slave UDP packet created");
 				
 				// Start communication threads
-				//new sendPos(player1, socket4, packet, buf, false).start();
+				new sendPos(player1, socket4, packet, buf, false).start();
 				
 				new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
 				

@@ -2,6 +2,7 @@ package com.labyrinthdash;
 
 import com.labyrinthdash.R;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 /**
  * GamePlayer is the sphere which the player will be controlling.
@@ -10,20 +11,32 @@ import android.graphics.Bitmap;
  */
 public class GamePlayer extends GameObject 
 {
+	/** A reference to the map */
+	public GameMap mapReference;
 	/** Velocity of the player */
-	Vector2D velocity;
+	public Vector2D velocity;
 	/** Position of the player in next frame if the current velocity is added */
-	Vector2D nextPosition;
+	public Vector2D nextPosition;
 	/** Position of player at last collision */
-	Vector2D lastCollision;
+	public Vector2D lastCollision;
 	/** Time of last collision as a percentage of time in between frames */
-	double timeOfCollision;
+	public double timeOfCollision;
 	/** Radius of the sphere representing the player */
-	double radius;
+	public double radius;
+	
 	/** Cell the player is currently in */
-	GameCell currentCell;
+	public GameCell currentCell;
 	/** Cell the player was in in the last frame */
-	GameCell lastCell = currentCell;
+	public GameCell lastCell = currentCell;
+	
+	/** Whether the player is currently in the air */
+	public boolean jumping;
+	/** How many frames the jump should last for */
+	public int jumpLength = 0;
+	/** The highest point of the jump */
+	public int apex = 0;
+	/** If the player has finished the map */
+	public boolean finshed;
 	
 	/**
 	 * Creates the player by calling the parent constructor of GameObject and
@@ -77,22 +90,43 @@ public class GamePlayer extends GameObject
 	 * @param accelY
 	 */
 	public void move(float accelX, float accelY) {
-		Vector2D acceleration = new Vector2D(accelX, accelY);
-    	
-    	// Adjust velocity of the ball according to slope
-    	velocity = velocity.add(acceleration);
-    	// Find what it's next position would be
-    	nextPosition = position.add(velocity);
-    	// Check if it would intersect or collide at that position
-    	checkCollision();
-    	if(currentCell != GameMap.getCellContaining(position)) {
-    		lastCell = currentCell;
-    		currentCell = GameMap.getCellContaining(position);
-    	}
-    	//if(currentCell.space) fall();
-    	currentCell.react(this);
-    	// If the cell doesn't hold the player go to next position
-    	if(!currentCell.held) position = position.add(velocity);
+		try {
+			Vector2D acceleration = new Vector2D(accelX, accelY);
+			// Adjust velocity of the ball according to slope
+			if (!jumping)
+				velocity = velocity.add(acceleration);
+			else
+				jump();
+			// Find what it's next position would be
+			nextPosition = position.add(velocity);
+			// Check if it would intersect or collide at that position
+			checkCollision();
+			if (currentCell != mapReference.getCellContaining(position)) {
+				if (currentCell != null) {
+					if (currentCell.support)
+						lastCell = currentCell;
+				}
+				currentCell = mapReference.getCellContaining(position);
+			}
+			//if(currentCell.space) fall();
+			currentCell.react(this);
+			// If the cell doesn't hold the player go to next position
+			position = position.add(velocity);
+		} catch (NullPointerException e) {
+			//Log.e("ERROR", "Map has not yet been created");
+		}
+	}
+	
+	private void jump() {
+		if(jumpLength == 0) {
+			jumping = false;
+		} else if(apex < jumpLength) {
+			apex++;
+			img = Bitmap.createScaledBitmap(img, (int)(img.getWidth()*1.05), (int)(img.getHeight()*1.05), false);			
+		} else {
+			jumpLength--;
+			img = Bitmap.createScaledBitmap(img, (int)(img.getWidth()*0.95), (int)(img.getHeight()*0.95), false);
+		}
 	}
 	
 	/**

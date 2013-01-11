@@ -1,5 +1,8 @@
 package com.labyrinthdash;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,7 +32,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	private SurfaceHolder holder;
 	private appThread surfaceThread;
 	private boolean running;
-	private boolean multiConnect = false;
+	private boolean multiConnect = true;
 	private Paint myPaint;
 	Panel _panel;
 	Paint paint = new Paint();
@@ -71,6 +74,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	// Player object
 	GamePlayer player;
 	String playerName;
+	
+	GameMap map;
 	
 	//Zooming
 	private ScaleGestureDetector mScaleDetector;
@@ -342,6 +347,14 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						{
 							sen.vibrate = true;
 							multiplayDialog.show();
+							
+							Log.d(TAG, "about to start connection");
+							
+							// No choice in partner
+							//new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
+							
+							Log.d(TAG, "connection process started");
+							
 							openMenu = true;
 						}
 					}
@@ -404,16 +417,32 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					{
 						if((touchX < (levelButtonX+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*25))+(sen.surfaceWidth/5)))
 						{
-							// TODO: Select map 1 here
+							sen.vibrate = true;
 							
+							map = new Map1();
+							player.mapReference = map;
+							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
 							stage = 5;
 							previousStage = 4;
 							Log.d(TAG, "Moving to stage 5");
-							sen.vibrate = true;
 						}
 					}
 					
 					// Level 2 button
+					if((touchX > levelButtonX2) && (touchY > ((sen.surfaceHeight/100)*40)))
+					{
+						if((touchX < (levelButtonX2+(sen.surfaceWidth/5))) && (touchY < (((sen.surfaceHeight/100)*40))+(sen.surfaceWidth/5)))
+						{
+							sen.vibrate = true;
+							
+							map = new Map2();
+							player.mapReference = map;
+							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
+							stage = 5;
+							previousStage = 4;
+							Log.d(TAG, "Moving to stage 5");
+						}
+					}
 					
 					// Level 3 button
 					
@@ -445,13 +474,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	 */
 	
 	public void initialise()
-	{
-		player.position = GameMap.startCell.position.add(GameMap.startCell.width/2, GameMap.startCell.height/2);
-		
+	{		
 		src = new Rect(0, 0, 610, 458);
 		dst = new Rect(0, 0, sen.surfaceWidth, sen.surfaceHeight);
 		
-		if(multiConnect == true)
+		/*if(multiConnect == true)
 		{
 			Log.d(TAG, "about to start connection");
 			
@@ -459,7 +486,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
 			
 			Log.d(TAG, "connection process started");
-		}
+		}*/
 	}
 	
 		
@@ -638,7 +665,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			// Zooming in or out
 			canvas.scale(mScaleFactor, mScaleFactor, (float)player.getX(), (float)player.getY());
 			
-			for(GameCell col[] : GameMap.Map) 
+			for(GameCell col[] : map.Map) 
 			{
 				for(GameCell cell : col) 
 				{

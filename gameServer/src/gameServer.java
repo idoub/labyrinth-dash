@@ -17,11 +17,12 @@ public class gameServer
 
         try 
         {
-            serverSocket = new ServerSocket(2222);
+            serverSocket = new ServerSocket(22);
+            System.out.println(Inet4Address.getLocalHost().getHostAddress());
         } 
         catch (IOException e) 
         {
-            System.err.println("Could not listen on port: 3333.");
+            System.err.println("Could not listen on port: 22.");
             System.exit(-1);
         }
  

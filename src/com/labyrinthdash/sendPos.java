@@ -46,7 +46,7 @@ class sendPos extends Thread
 			buf2 = new byte[4];
 			b = ByteBuffer.allocate(4);
 			
-			float IsaacY = 89;
+			float IsaacY = (float) player.getY();
 			
 			inY = (int)IsaacY;
 			
@@ -60,7 +60,7 @@ class sendPos extends Thread
 			buf2 = new byte[4];
 			b = ByteBuffer.allocate(4);	
 			
-			float IsaacX = 118;
+			float IsaacX = (float) player.getX();
 			
 			inX = (int)IsaacX;	
 			b.putInt(inX);
