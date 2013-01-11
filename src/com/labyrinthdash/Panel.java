@@ -87,6 +87,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	private AlertDialog.Builder helpDialog;
 	private boolean nameChosen = false;
 	
+	// Score keeping
+	private int score = 3000;
+	private long start;
+	private long end;
+	
 	public Panel(final Context context, GamePlayer p)
 	{
 		super(context);
@@ -107,13 +112,13 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	    	 mScaleFactor = 1f;
 	         break;
 	     case DisplayMetrics.DENSITY_MEDIUM:
-	    	 mScaleFactor = 1.1f;
+	    	 mScaleFactor = 1f;
 	         break;
 	     case DisplayMetrics.DENSITY_HIGH:
-	    	 mScaleFactor = 1.4f;
+	    	 mScaleFactor = 1f;
 	    	 break;
 	     case DisplayMetrics.DENSITY_XHIGH:
-	    	 mScaleFactor = 1.5f;
+	    	 mScaleFactor = 1f;
 	    	 break;
 		}
 		
@@ -407,6 +412,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							// TODO: Select map 1 here
 							
 							stage = 5;
+							score = 3000;
 							previousStage = 4;
 							Log.d(TAG, "Moving to stage 5");
 							sen.vibrate = true;
@@ -939,6 +945,13 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 				}
 		
+				if (stage == 5) {
+					score--;
+					if(score == 0) {
+						stage = 4;
+					}
+				}
+				
 				try 
 				{
 					Thread.sleep(20);
