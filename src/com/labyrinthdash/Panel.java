@@ -1302,33 +1302,48 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						// Save score
 						if(levelSelect == 1)
 						{
-							score1 = score;
-							editor.putInt("level1", score);
-	                      	editor.commit();     	
+							if(score > score1)
+							{
+								score1 = score;
+								editor.putInt("level1", score);
+		                      	editor.commit(); 
+							}    	
 						}
 						else if(levelSelect == 2)
 						{
-							score2 = score;
-							editor.putInt("level2", score);
-	                      	editor.commit();   
+							if(score > score2)
+							{
+								score2 = score;
+								editor.putInt("level2", score);
+		                      	editor.commit();  
+							} 
 						}
 						else if(levelSelect == 3)
 						{
-							score3 = score;
-							editor.putInt("level3", score);
-	                      	editor.commit();   
+							if(score > score3)
+							{
+								score3 = score;
+								editor.putInt("level3", score);
+		                      	editor.commit(); 
+							}  
 						}
 						else if(levelSelect == 4)
 						{
-							score4 = score;
-							editor.putInt("level4", score);
-	                      	editor.commit();   
+							if(score > score4)
+							{
+								score4 = score;
+								editor.putInt("level4", score);
+		                      	editor.commit();						
+							}   
 						}
 						else
 						{
-							score5 = score;
-							editor.putInt("level5", score);
-	                      	editor.commit();   
+							if(score > score5)
+							{
+								score5 = score;
+								editor.putInt("level5", score);
+		                      	editor.commit(); 	
+							}  
 						}
 						
 						previousX = 9999;
