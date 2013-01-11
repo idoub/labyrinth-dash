@@ -122,9 +122,8 @@ public class GamePlayer extends GameObject
 	}
 	
 	private void jump() {
-		Animation playerJumpAnimation = AnimationUtils.loadAnimation(Game.getContext(), R.anim.playerjump);
+		//Animation playerJumpAnimation = AnimationUtils.loadAnimation(Game.getContext(), R.anim.playerjump);
 		
-		/*
 		if(jumpLength == 0) {
 			jumping = false;
 		} else if(apex < jumpLength) {
@@ -133,7 +132,7 @@ public class GamePlayer extends GameObject
 		} else {
 			jumpLength--;
 			img = Bitmap.createScaledBitmap(img, (int)(img.getWidth()*0.95), (int)(img.getHeight()*0.95), false);
-		}*/
+		}
 	}
 	
 	/**
