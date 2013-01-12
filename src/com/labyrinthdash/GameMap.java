@@ -212,3 +212,71 @@ class Map2 extends GameMap {
 		startCell = Map[2][0];
 	}
 }
+
+class Map3 extends GameMap {
+	public Map3() {
+		constructMap();
+		Log.i("INFO", "New map created");
+	}
+	
+	public Map3(int r, int c) {
+		rows = r;
+		columns = c;
+		constructMap();
+		Log.i("INFO", "New map created");
+	}
+	
+	private void constructMap() {
+		//makeBackground(R.drawable.clouds);
+		Map = new GameCell[columns][rows];
+
+		for(int i=0; i<columns; i++) {
+			for(int j=0; j<rows; j++) {
+				Map[i][j] = new EmptyCell(R.drawable.spaceblack,i,j);
+			}
+		}
+
+		Map[0][0] = new Platform(R.drawable.metalstart,0,0);
+		Map[1][0] = new WallTop(R.drawable.metalwalltop,1,0);
+		Map[2][0] = new WallTop(R.drawable.metalwalltop,2,0);
+		Map[3][0] = new WallsTopRight(R.drawable.metalwallstr,3,0);
+		
+		Map[0][1] = new Platform(R.drawable.metalplatform,0,1);
+		Map[3][1] = new BoostDown(R.drawable.metalboostdown,3,1);
+		
+		Map[0][2] = new Platform(R.drawable.metalplatform,0,2);
+		Map[3][2] = new Jump(R.drawable.metaljump,3,2);
+		
+		Map[0][3] = new Platform(R.drawable.metalplatform,0,3);
+		Map[1][3] = new WallsHorizontal(R.drawable.metalwallshorizontal,1,3);
+		Map[2][3] = new WallsHorizontal(R.drawable.metalwallshorizontal,2,3);
+		Map[3][3] = new WallsHorizontal(R.drawable.metalwallshorizontal,3,3);
+		Map[4][3] = new WallsHorizontal(R.drawable.metalwallshorizontal,4,3);
+		Map[5][3] = new BoostDown(R.drawable.metalboostdown,5,3);
+		
+		Map[1][4] = new Platform(R.drawable.metalplatform,1,4);
+		Map[2][4] = new Platform(R.drawable.metalplatform,2,4);
+		Map[3][4] = new Platform(R.drawable.metalplatform,3,4);
+		Map[4][4] = new Platform(R.drawable.metalplatform,4,4);
+		Map[5][4] = new Platform(R.drawable.metalplatform,5,4);
+		
+		Map[1][5] = new Platform(R.drawable.metalplatform,1,5);
+		Map[2][5] = new Platform(R.drawable.metalplatform,2,5);
+		Map[3][5] = new WallRight(R.drawable.metalwallright,3,5);
+		Map[4][5] = new Platform(R.drawable.metalplatform,4,5);
+		Map[5][5] = new BoostLeft(R.drawable.metalboostleft,5,5);
+		
+		Map[1][6] = new Platform(R.drawable.metalplatform,1,6);
+		Map[3][6] = new WallBottom(R.drawable.metalwallbottom,3,6);
+		
+		Map[1][7] = new Platform(R.drawable.metalplatform,1,7);
+		
+		Map[1][8] = new Platform(R.drawable.metalplatform,1,8);
+		Map[2][8] = new Platform(R.drawable.metalplatform,2,8);
+		Map[3][8] = new Platform(R.drawable.metalplatform,3,8);
+		Map[4][8] = new Platform(R.drawable.metalplatform,4,8);
+		Map[5][8] = new PlatformEnd(R.drawable.metalend,5,8);
+		
+		startCell = Map[0][0];
+	}
+}
