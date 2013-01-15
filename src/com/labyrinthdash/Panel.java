@@ -1203,7 +1203,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						}
 						if(levelSelect == 3)
 						{
-							map = new Map1();
+							map = new Map3();
 							player.reset();
 							player.mapReference = map;
 							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
