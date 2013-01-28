@@ -74,7 +74,7 @@ public class InitialConnect extends Thread
 			Log.d(TAG, "About to try and connect");
 			
 			socket1 = null;
-			socket1 = new Socket("172.21.206.138", 22);
+			socket1 = new Socket("192.168.0.102", 7777);
 			
 		    if(socket1 == null)
 		    {
@@ -170,7 +170,7 @@ public class InitialConnect extends Thread
 				
 				// Receive TCP connection from Master
 				socket2 = null;
-				socket2 = new ServerSocket(7777);
+				socket2 = new ServerSocket(4444);
 				
 				socket1 = socket2.accept();
 				
@@ -209,7 +209,7 @@ public class InitialConnect extends Thread
 								
 				// Make TCP connection to slave
 				socket1 = null;
-				socket1 = new Socket(masterIP, 7777);
+				socket1 = new Socket(masterIP, 4444);
 				
 				if(socket1 == null)
 				{

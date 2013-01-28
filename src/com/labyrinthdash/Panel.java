@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -343,23 +344,25 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						if(openMenu == false)
 						{
 							sen.vibrate = true;
-							multiplayDialog.show();
+							//multiplayDialog.show();
+							
+							//TODO
 							
 							if(multiConnect == true)
 							{
 								Log.d(TAG, "about to start connection");
 								
 								// No choice in partner
-								//new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
+								new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
 								
-								/*
-								 * 	multiPlayerChosen = true;
+								
+								  	multiPlayerChosen = true;
 								 	loadLevel = 0;
 									levelSelect = 1;
 									stage = 5;
 									previousStage = 4;
 									Log.d(TAG, "Moving to stage 5");
-								 */
+								 
 								
 								Log.d(TAG, "connection process started");
 								
@@ -809,7 +812,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 			if(multiPlayerChosen == true)
 			{
-				canvas.drawBitmap(player.img, sen.receiveX, sen.receiveY, myPaint);
+				canvas.drawBitmap(bmpStar1, sen.receiveX, sen.receiveY, myPaint);
 			}
 			
 			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
@@ -973,6 +976,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	{
 		// Deal with orientation change
 	}
+	
 
 	class appThread extends Thread
 	{
@@ -1164,7 +1168,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					{
 						if(plevelButtonX >= ((sen.surfaceWidth/4)-(sen.surfaceWidth)))
 						{			
-							//TODO: "Level" button
 							plevelButtonX -= (sen.surfaceWidth/10);
 							plevelButtonX2 -= (sen.surfaceWidth/10);
 							pbackButtonX -= (sen.surfaceWidth/10);

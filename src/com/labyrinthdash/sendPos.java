@@ -83,7 +83,7 @@ class sendPos extends Thread
 			
 		try
 		{
-			Thread.sleep(50);
+			Thread.sleep(250);
 		}
 		catch (Exception e)
 		{

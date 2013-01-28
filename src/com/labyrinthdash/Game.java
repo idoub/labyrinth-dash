@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -152,14 +154,14 @@ public class Game extends Activity implements AccelerometerListener
         {
             AccelerometerManager.stopListening();
         }
-        
-        //finish();
-        
+    
         System.exit(0);
     }
     
     protected void onPause()
 	{
+    	//Log.d("PAUSE","Back pressed");
+    	
 		super.onPause();
 		
         if (AccelerometerManager.isListening()) 
@@ -168,16 +170,13 @@ public class Game extends Activity implements AccelerometerListener
         }
         
         System.exit(0);
-        
-        //finish();
 	}
  
     public static Context getContext() 
     {
         return CONTEXT;
     }
- 
-    
+       
     //onAccelerationChanged callback
     public void onAccelerationChanged(float x, float y, float z) 
     {
