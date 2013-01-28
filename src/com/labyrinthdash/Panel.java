@@ -544,22 +544,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	//@SuppressWarnings("deprecation")
-	public void onPause()
-	{
-		if (surfaceThread != null)
-		{
-			surfaceThread.finish();
-			surfaceThread = null;
-			//System.runFinalizersOnExit(true);
-		}
-		
-		System.exit(0);
-		
-		
-		
-		//super.onPause();
-		//onDestroy();
-	}
+	
 	
 	/*
 	 * Handles all displaying of graphics on the device screen
@@ -569,280 +554,272 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	@Override
 	public void onDraw(Canvas canvas)
 	{		
-		if(sen.endThread != true)
-		{			
-			super.onDraw(canvas);
-			
-			canvas.save();
-			
-			// Intial start screen
-			if(stage == 0)
-			{
-				if(logoX > (sen.surfaceWidth/12))
-				{
-					logoX-=2;
-				}
-				if(logoSize < (sen.surfaceWidth)-(sen.surfaceWidth/6))
-				{
-					logoSize += 4;
-					bmpLogo = resizeImage(bmpOriginalLogo, (sen.surfaceHeight/4), logoSize);
-				}
-				
-				canvas.drawBitmap(bmpMetal2, leftPanel, 0, myPaint);
-				canvas.drawBitmap(bmpMetal1, rightPanel, 0, myPaint);
-				
-				canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
-			}
-			
-			// Transition from start screen to main menu
-			// Timing is computed in mainThread async thread
-			if(stage == 1)
-			{			
-				canvas.drawBitmap(bmpBackground, src, dst, myPaint);
-				
-				for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
-				{
-					canvas.drawBitmap(bmpBorder, (-(sen.surfaceWidth/20)), i, myPaint);
-				}
-				
-				for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
-				{
-					canvas.drawBitmap(bmpBorder, (sen.surfaceWidth-(sen.surfaceWidth/20)), i, myPaint);
-				}
-				
-				for(int i = -(sen.surfaceWidth/20); i < sen.surfaceWidth; i += (sen.surfaceWidth/10))
-				{
-					canvas.drawBitmap(bmpBorder, i, (-(sen.surfaceWidth/20)), myPaint);
-				}
-				
-				for(int i = -(sen.surfaceWidth/20); i < sen.surfaceWidth; i += (sen.surfaceWidth/10))
-				{
-					canvas.drawBitmap(bmpBorder, i, (sen.surfaceHeight-(sen.surfaceWidth/20)), myPaint);
-				}	
-				
-				canvas.drawBitmap(bmpSingle, (sen.surfaceWidth/4), ((sen.surfaceHeight/100)*50), myPaint);
-				canvas.drawBitmap(bmpMulti, (sen.surfaceWidth/4), ((sen.surfaceHeight/100)*62), myPaint);
-				canvas.drawBitmap(bmpHelp, (sen.surfaceWidth/4), ((sen.surfaceHeight/100)*74), myPaint);
-				canvas.drawBitmap(bmpAbout, (sen.surfaceWidth/4), ((sen.surfaceHeight/100)*86), myPaint);
-				
-				canvas.drawBitmap(bmpMetal2, leftPanel, 0, myPaint);
-				canvas.drawBitmap(bmpMetal1, rightPanel, 0, myPaint);
-				
-				canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
-			}		
-			
-			// Main menu
-			if(stage == 2)
-			{						
-				canvas.drawBitmap(bmpBackground, src, dst, myPaint);	
-				canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
-				canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
-				canvas.drawBitmap(bmpSingle, buttonX, ((sen.surfaceHeight/100)*50), myPaint);
-				canvas.drawBitmap(bmpMulti, buttonX, ((sen.surfaceHeight/100)*62), myPaint);
-				canvas.drawBitmap(bmpHelp, buttonX, ((sen.surfaceHeight/100)*74), myPaint);
-				canvas.drawBitmap(bmpAbout, buttonX, ((sen.surfaceHeight/100)*86), myPaint);
-			}
-			
-			// Transition from main menu to single player menu
-			// Changing of bitmap position computed in mainTask async thread 
-			if(stage == 3)
-			{			
-				canvas.drawBitmap(bmpBackground, src, dst, myPaint);
-				canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
-				
-				canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
-				canvas.drawBitmap(bmpSingle, buttonX, ((sen.surfaceHeight/100)*50), myPaint);
-				canvas.drawBitmap(bmpMulti, buttonX, ((sen.surfaceHeight/100)*62), myPaint);
-				canvas.drawBitmap(bmpHelp, buttonX, ((sen.surfaceHeight/100)*74), myPaint);
-				canvas.drawBitmap(bmpAbout, buttonX, ((sen.surfaceHeight/100)*86), myPaint);
-	
-				canvas.drawBitmap(bmpLevel1, levelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
-				canvas.drawBitmap(bmpLevel2, levelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
-				canvas.drawBitmap(bmpLevel3, levelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
-				canvas.drawBitmap(bmpLevel4, levelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
-				canvas.drawBitmap(bmpLevel5, levelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
-				canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
-			}
-			
-			// Choose single player level
-			if(stage == 4)
-			{
-				canvas.drawBitmap(bmpBackground, src, dst, myPaint);
-				canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
-				
-				canvas.drawBitmap(bmpLevel1, levelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
-				canvas.drawBitmap(bmpLevel2, levelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
-				canvas.drawBitmap(bmpLevel3, levelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
-				canvas.drawBitmap(bmpLevel4, levelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
-				canvas.drawBitmap(bmpLevel5, levelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
-				
-				canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
-				
-				canvas.drawBitmap(bmpLevels, ((sen.surfaceWidth/2)-(sen.surfaceWidth/4)), (sen.surfaceHeight/16) , myPaint);
-				
-				// Level 1
-				if(score1 == 1)
-				{
-					canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
-				}
-				if(score1 == 2)
-				{
-					canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
-				}
-				if(score1 == 3)
-				{
-					canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
-				}
-				
-				// Level 2
-				if(score2 == 1)
-				{
-					canvas.drawBitmap(bmpStar1, (levelButtonX + ((sen.surfaceWidth/10)*3)), ((sen.surfaceHeight/100)*40), myPaint);
-				}
-				if(score2 == 2)
-				{
-					canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*40), myPaint);
-				}
-				if(score2 == 3)
-				{
-					canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/8)), ((sen.surfaceHeight/100)*40), myPaint);
-				}
-				
-				// Level 3
-				if(score3 == 1)
-				{
-					canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
-				}
-				if(score3 == 2)
-				{
-					canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
-				}
-				if(score3 == 3)
-				{
-					canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
-				}	
-				
-				// Level 4
-				if(score4 == 1)
-				{
-					canvas.drawBitmap(bmpStar1, (levelButtonX + ((sen.surfaceWidth/10)*3)), ((sen.surfaceHeight/100)*70), myPaint);
-				}
-				if(score4 == 2)
-				{
-					canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*70), myPaint);
-				}
-				if(score4 == 3)
-				{
-					canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/8)), ((sen.surfaceHeight/100)*70), myPaint);
-				}
-				
-				// Level 5
-				if(score5 == 1)
-				{
-					canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
-				}
-				if(score5 == 2)
-				{
-					canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
-				}
-				if(score5 == 3)
-				{
-					canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
-				}
-			}
-			
-			// Transition to game play
-			if(stage == 5)
-			{
-				canvas.drawBitmap(bmpBackground, src, dst, myPaint);
-				
-				canvas.drawBitmap(bmpLevel1, plevelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
-				canvas.drawBitmap(bmpLevel2, plevelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
-				canvas.drawBitmap(bmpLevel3, plevelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
-				canvas.drawBitmap(bmpLevel4, plevelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
-				canvas.drawBitmap(bmpLevel5, plevelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
-				
-				canvas.drawBitmap(bmpBackButtonLeft, pbackButtonX, ((sen.surfaceHeight/100)*5), myPaint);
-				
-				canvas.drawBitmap(bmpLoading, (plevelButtonX + sen.surfaceWidth), (sen.surfaceHeight/6), myPaint);
-				
-				canvas.drawBitmap(bmpLevel3, countDown1, ((sen.surfaceHeight/100)*70), myPaint);
-				canvas.drawBitmap(bmpLevel2, countDown2, ((sen.surfaceHeight/100)*70), myPaint);
-				canvas.drawBitmap(bmpLevel1, countDown3, ((sen.surfaceHeight/100)*70), myPaint);
-			}
-			
-			// Transition from game play
-			if(stage == 7)
-			{
-				canvas.drawBitmap(bmpBackground, src, dst, myPaint);
-				
-				canvas.drawBitmap(bmpLevel1, plevelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
-				canvas.drawBitmap(bmpLevel2, plevelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
-				canvas.drawBitmap(bmpLevel3, plevelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
-				canvas.drawBitmap(bmpLevel4, plevelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
-				canvas.drawBitmap(bmpLevel5, plevelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
-				
-				canvas.drawBitmap(bmpBackButtonLeft, pbackButtonX, ((sen.surfaceHeight/100)*5), myPaint);
-			}
-				
-			// Draw menu boundary platforms 
-			if((stage == 2) || (stage == 3) || (stage == 4) || (stage == 5) || (stage == 7))
-			{
-				for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
-				{
-					canvas.drawBitmap(bmpBorder, (-(sen.surfaceWidth/20)), i, myPaint);
-				}
-				
-				for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
-				{
-					canvas.drawBitmap(bmpBorder, (sen.surfaceWidth-(sen.surfaceWidth/20)), i, myPaint);
-				}
-				
-				for(int i = -(sen.surfaceWidth/20); i < sen.surfaceWidth; i += (sen.surfaceWidth/10))
-				{
-					canvas.drawBitmap(bmpBorder, i, (-(sen.surfaceWidth/20)), myPaint);
-				}
-				
-				for(int i = -(sen.surfaceWidth/20); i < sen.surfaceWidth; i += (sen.surfaceWidth/10))
-				{
-					canvas.drawBitmap(bmpBorder, i, (sen.surfaceHeight-(sen.surfaceWidth/20)), myPaint);
-				}
-			}		
-			
-			// Game play
-			if(stage == 6)
-			{			
-				// Zooming in or out
-				canvas.scale(mScaleFactor, mScaleFactor, (float)player.getX(), (float)player.getY());
-				
-				for(GameCell col[] : map.Map) 
-				{
-					for(GameCell cell : col) 
-					{
-						canvas.drawBitmap(cell.img, (float)cell.position.x, (float)cell.position.y, myPaint);
-					}
-				}
-				canvas.drawBitmap(player.img, (float)(player.position.x - player.img.getWidth()*0.5), (float)(player.position.y - player.img.getHeight()*0.5), myPaint);
-			
-				if(multiPlayerChosen == true)
-				{
-					canvas.drawBitmap(player.img, sen.receiveX, sen.receiveY, myPaint);
-				}
-				
-				canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
-				
-				if(player.finshed) {
-					stage = 7;
-				}
-			}		
-			
-			canvas.restore();
-		}
-		else
+		super.onDraw(canvas);
+		
+		canvas.save();
+		
+		// Intial start screen
+		if(stage == 0)
 		{
-			//surfaceThread.fi;
+			if(logoX > (sen.surfaceWidth/12))
+			{
+				logoX-=2;
+			}
+			if(logoSize < (sen.surfaceWidth)-(sen.surfaceWidth/6))
+			{
+				logoSize += 4;
+				bmpLogo = resizeImage(bmpOriginalLogo, (sen.surfaceHeight/4), logoSize);
+			}
 			
+			canvas.drawBitmap(bmpMetal2, leftPanel, 0, myPaint);
+			canvas.drawBitmap(bmpMetal1, rightPanel, 0, myPaint);
+			
+			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
 		}
+		
+		// Transition from start screen to main menu
+		// Timing is computed in mainThread async thread
+		if(stage == 1)
+		{			
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			
+			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
+			{
+				canvas.drawBitmap(bmpBorder, (-(sen.surfaceWidth/20)), i, myPaint);
+			}
+			
+			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
+			{
+				canvas.drawBitmap(bmpBorder, (sen.surfaceWidth-(sen.surfaceWidth/20)), i, myPaint);
+			}
+			
+			for(int i = -(sen.surfaceWidth/20); i < sen.surfaceWidth; i += (sen.surfaceWidth/10))
+			{
+				canvas.drawBitmap(bmpBorder, i, (-(sen.surfaceWidth/20)), myPaint);
+			}
+			
+			for(int i = -(sen.surfaceWidth/20); i < sen.surfaceWidth; i += (sen.surfaceWidth/10))
+			{
+				canvas.drawBitmap(bmpBorder, i, (sen.surfaceHeight-(sen.surfaceWidth/20)), myPaint);
+			}	
+			
+			canvas.drawBitmap(bmpSingle, (sen.surfaceWidth/4), ((sen.surfaceHeight/100)*50), myPaint);
+			canvas.drawBitmap(bmpMulti, (sen.surfaceWidth/4), ((sen.surfaceHeight/100)*62), myPaint);
+			canvas.drawBitmap(bmpHelp, (sen.surfaceWidth/4), ((sen.surfaceHeight/100)*74), myPaint);
+			canvas.drawBitmap(bmpAbout, (sen.surfaceWidth/4), ((sen.surfaceHeight/100)*86), myPaint);
+			
+			canvas.drawBitmap(bmpMetal2, leftPanel, 0, myPaint);
+			canvas.drawBitmap(bmpMetal1, rightPanel, 0, myPaint);
+			
+			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
+		}		
+		
+		// Main menu
+		if(stage == 2)
+		{						
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);	
+			canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
+			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
+			canvas.drawBitmap(bmpSingle, buttonX, ((sen.surfaceHeight/100)*50), myPaint);
+			canvas.drawBitmap(bmpMulti, buttonX, ((sen.surfaceHeight/100)*62), myPaint);
+			canvas.drawBitmap(bmpHelp, buttonX, ((sen.surfaceHeight/100)*74), myPaint);
+			canvas.drawBitmap(bmpAbout, buttonX, ((sen.surfaceHeight/100)*86), myPaint);
+		}
+		
+		// Transition from main menu to single player menu
+		// Changing of bitmap position computed in mainTask async thread 
+		if(stage == 3)
+		{			
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
+			
+			canvas.drawBitmap(bmpLogo, logoX, logoY, myPaint);
+			canvas.drawBitmap(bmpSingle, buttonX, ((sen.surfaceHeight/100)*50), myPaint);
+			canvas.drawBitmap(bmpMulti, buttonX, ((sen.surfaceHeight/100)*62), myPaint);
+			canvas.drawBitmap(bmpHelp, buttonX, ((sen.surfaceHeight/100)*74), myPaint);
+			canvas.drawBitmap(bmpAbout, buttonX, ((sen.surfaceHeight/100)*86), myPaint);
+
+			canvas.drawBitmap(bmpLevel1, levelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
+			canvas.drawBitmap(bmpLevel2, levelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
+			canvas.drawBitmap(bmpLevel3, levelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
+			canvas.drawBitmap(bmpLevel4, levelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel5, levelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
+			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+		}
+		
+		// Choose single player level
+		if(stage == 4)
+		{
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			canvas.drawBitmap(bmpAsteroid, asteroidX, asteroidY, myPaint);
+			
+			canvas.drawBitmap(bmpLevel1, levelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
+			canvas.drawBitmap(bmpLevel2, levelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
+			canvas.drawBitmap(bmpLevel3, levelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
+			canvas.drawBitmap(bmpLevel4, levelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel5, levelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
+			
+			canvas.drawBitmap(bmpBackButtonLeft, backButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+			
+			canvas.drawBitmap(bmpLevels, ((sen.surfaceWidth/2)-(sen.surfaceWidth/4)), (sen.surfaceHeight/16) , myPaint);
+			
+			// Level 1
+			if(score1 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
+			}
+			if(score1 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
+			}
+			if(score1 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*25), myPaint);
+			}
+			
+			// Level 2
+			if(score2 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + ((sen.surfaceWidth/10)*3)), ((sen.surfaceHeight/100)*40), myPaint);
+			}
+			if(score2 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*40), myPaint);
+			}
+			if(score2 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/8)), ((sen.surfaceHeight/100)*40), myPaint);
+			}
+			
+			// Level 3
+			if(score3 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
+			}
+			if(score3 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
+			}
+			if(score3 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*55), myPaint);
+			}	
+			
+			// Level 4
+			if(score4 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + ((sen.surfaceWidth/10)*3)), ((sen.surfaceHeight/100)*70), myPaint);
+			}
+			if(score4 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*70), myPaint);
+			}
+			if(score4 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/8)), ((sen.surfaceHeight/100)*70), myPaint);
+			}
+			
+			// Level 5
+			if(score5 == 1)
+			{
+				canvas.drawBitmap(bmpStar1, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
+			}
+			if(score5 == 2)
+			{
+				canvas.drawBitmap(bmpStar2, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
+			}
+			if(score5 == 3)
+			{
+				canvas.drawBitmap(bmpStar3, (levelButtonX + (sen.surfaceWidth/5)), ((sen.surfaceHeight/100)*85), myPaint);
+			}
+		}
+		
+		// Transition to game play
+		if(stage == 5)
+		{
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			
+			canvas.drawBitmap(bmpLevel1, plevelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
+			canvas.drawBitmap(bmpLevel2, plevelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
+			canvas.drawBitmap(bmpLevel3, plevelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
+			canvas.drawBitmap(bmpLevel4, plevelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel5, plevelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
+			
+			canvas.drawBitmap(bmpBackButtonLeft, pbackButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+			
+			canvas.drawBitmap(bmpLoading, (plevelButtonX + sen.surfaceWidth), (sen.surfaceHeight/6), myPaint);
+			
+			canvas.drawBitmap(bmpLevel3, countDown1, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel2, countDown2, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel1, countDown3, ((sen.surfaceHeight/100)*70), myPaint);
+		}
+		
+		// Transition from game play
+		if(stage == 7)
+		{
+			canvas.drawBitmap(bmpBackground, src, dst, myPaint);
+			
+			canvas.drawBitmap(bmpLevel1, plevelButtonX, ((sen.surfaceHeight/100)*25), myPaint);
+			canvas.drawBitmap(bmpLevel2, plevelButtonX2, ((sen.surfaceHeight/100)*40), myPaint);
+			canvas.drawBitmap(bmpLevel3, plevelButtonX, ((sen.surfaceHeight/100)*55), myPaint);
+			canvas.drawBitmap(bmpLevel4, plevelButtonX2, ((sen.surfaceHeight/100)*70), myPaint);
+			canvas.drawBitmap(bmpLevel5, plevelButtonX, ((sen.surfaceHeight/100)*85), myPaint);	
+			
+			canvas.drawBitmap(bmpBackButtonLeft, pbackButtonX, ((sen.surfaceHeight/100)*5), myPaint);
+		}
+			
+		// Draw menu boundary platforms 
+		if((stage == 2) || (stage == 3) || (stage == 4) || (stage == 5) || (stage == 7))
+		{
+			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
+			{
+				canvas.drawBitmap(bmpBorder, (-(sen.surfaceWidth/20)), i, myPaint);
+			}
+			
+			for(int i = (sen.surfaceWidth/20); i < sen.surfaceHeight; i += (sen.surfaceWidth/10))
+			{
+				canvas.drawBitmap(bmpBorder, (sen.surfaceWidth-(sen.surfaceWidth/20)), i, myPaint);
+			}
+			
+			for(int i = -(sen.surfaceWidth/20); i < sen.surfaceWidth; i += (sen.surfaceWidth/10))
+			{
+				canvas.drawBitmap(bmpBorder, i, (-(sen.surfaceWidth/20)), myPaint);
+			}
+			
+			for(int i = -(sen.surfaceWidth/20); i < sen.surfaceWidth; i += (sen.surfaceWidth/10))
+			{
+				canvas.drawBitmap(bmpBorder, i, (sen.surfaceHeight-(sen.surfaceWidth/20)), myPaint);
+			}
+		}		
+		
+		// Game play
+		if(stage == 6)
+		{			
+			// Zooming in or out
+			canvas.scale(mScaleFactor, mScaleFactor, (float)player.getX(), (float)player.getY());
+			
+			for(GameCell col[] : map.Map) 
+			{
+				for(GameCell cell : col) 
+				{
+					canvas.drawBitmap(cell.img, (float)cell.position.x, (float)cell.position.y, myPaint);
+				}
+			}
+			canvas.drawBitmap(player.img, (float)(player.position.x - player.img.getWidth()*0.5), (float)(player.position.y - player.img.getHeight()*0.5), myPaint);
+		
+			if(multiPlayerChosen == true)
+			{
+				canvas.drawBitmap(player.img, sen.receiveX, sen.receiveY, myPaint);
+			}
+			
+			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
+			
+			if(player.finshed) {
+				stage = 7;
+			}
+		}		
+		
+		canvas.restore();
 	}
 
 	
@@ -987,9 +964,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		running = false;
 		
 		surfaceThread.finish();
-		
-		sen.ended = true;
-		
+		//appTask.isCancelled();
 		
 		//onPause();
 	}
@@ -1424,5 +1399,4 @@ class sen
 	public static int receiveY = 0;
 	
 	public static boolean endThread = false;
-	public static boolean ended = false;
 }
