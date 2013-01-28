@@ -144,14 +144,21 @@ public class Game extends Activity implements AccelerometerListener
  
     protected void onDestroy() 
     {
+    	sen.endThread = true;
+    	   	
     	super.onDestroy();
+    	
+    	while(sen.ended == false)
+    	{
+    		
+    	}
     	
         if (AccelerometerManager.isListening()) 
         {
             AccelerometerManager.stopListening();
         }
         
-        System.exit(0);
+        finish();
     }
  
     public static Context getContext() 
