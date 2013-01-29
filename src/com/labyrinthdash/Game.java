@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -75,6 +76,12 @@ public class Game extends Activity implements AccelerometerListener
         	Toast toast = Toast.makeText(CONTEXT, e.getMessage(), Toast.LENGTH_SHORT);
         	toast.show();
         }
+        
+        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+		if (wifi.isWifiEnabled())
+		{
+			sen.wifiEnabled = true;
+		}
         
         //Location        
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

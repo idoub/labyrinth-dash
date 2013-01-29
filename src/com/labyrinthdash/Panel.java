@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
@@ -348,8 +349,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							
 							//TODO
 							
-							if(multiConnect == true)
+							if((multiConnect == true) && (sen.wifiEnabled == true))
 							{
+																
 								Log.d(TAG, "about to start connection");
 								
 								sen.endThread = false;
@@ -373,7 +375,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 								Log.d(TAG, "connection process started");
 								
 								//multiConnect = false;
-							}							
+							}
+							else
+							{
+								//TODO: SHOW MESSAGE
+							}
 						}
 					}
 				}
@@ -839,6 +845,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				sen.receiveY = 0;
 				
 				stage = 7;
+				
+				//TODO: SHOW MESSAGE
 			}
 			
 			
@@ -1463,4 +1471,5 @@ class sen
 	public static boolean opponentWon = false;
 	public static boolean movePlayer = false;
 	public static boolean connectionError = false;
+	public static boolean wifiEnabled = false;
 }
