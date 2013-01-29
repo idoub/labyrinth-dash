@@ -126,6 +126,11 @@ class receivePos extends Thread
 		    sen.receiveX = tempPosX2;
 		    sen.receiveY = tempPosY2;
 		    
+		    if((sen.receiveX != 0) || (sen.receiveY != 0))
+		    {
+		    	sen.movePlayer = true;
+		    }		    
+		    
 		    // player.setX(tempPosX);
 		    //player.setY(tempPosY);
 		        

@@ -354,7 +354,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 								
 								sen.endThread = false;
 								
+								sen.opponentWon = false;
+								sen.movePlayer = false;
+								sen.connectionError = false;
+								
 								multiPlayerChosen = true;
+								
 								loadLevel = 0;
 								levelSelect = 1;
 								stage = 3;
@@ -426,6 +431,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 1;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
@@ -440,6 +446,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 2;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
@@ -454,6 +461,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 3;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
@@ -468,6 +476,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 4;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
@@ -482,6 +491,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 5;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}		
@@ -507,6 +517,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				{
 					stage = 7;
 					score = 100;
+					sen.movePlayer = true;
+					sen.endThread = true;
+					sen.receiveX = 0;
+					sen.receiveY = 0;
 					sen.vibrate = true;
 				}
 			}
@@ -817,12 +831,26 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			
 			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
 			
+			if((sen.connectionError == true) && (multiPlayerChosen == true))
+			{
+				sen.movePlayer = true;
+				sen.endThread = true;
+				sen.receiveX = 0;
+				sen.receiveY = 0;
+				
+				stage = 7;
+			}
+			
+			
 			if(player.finshed) 
 			{
+				sen.movePlayer = true;
 				
 				if(multiPlayerChosen == true)
 				{
 					sen.endThread = true;
+					sen.receiveX = 0;
+					sen.receiveY = 0;
 					
 					stage = 7;
 				}
@@ -1302,6 +1330,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				
 				if(stage == 7)
 				{					
+					sen.receiveX = 0;
+					sen.receiveY = 0;
+					
 					if(plevelButtonX < levelButtonX)
 					{			
 						plevelButtonX += (sen.surfaceWidth/10);
@@ -1428,7 +1459,8 @@ class sen
 	public static int receiveX = 0;
 	public static int receiveY = 0;
 	
-	public static boolean endThread = false;
-	
-	public static boolean endMulti = false;
+	public static boolean endThread = false;	
+	public static boolean opponentWon = false;
+	public static boolean movePlayer = false;
+	public static boolean connectionError = false;
 }

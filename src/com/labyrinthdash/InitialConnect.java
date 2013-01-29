@@ -92,6 +92,8 @@ public class InitialConnect extends Thread
 	    } 
 		catch (UnknownHostException e) 
 		{
+			sen.connectionError = true;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 1");
@@ -100,6 +102,8 @@ public class InitialConnect extends Thread
 		} 
 		catch (IOException e) 
 		{
+			sen.connectionError = true;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 2");
@@ -145,6 +149,8 @@ public class InitialConnect extends Thread
 		}
 		catch (UnknownHostException e) 
 		{
+			sen.connectionError = true;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 3");
@@ -153,6 +159,8 @@ public class InitialConnect extends Thread
 		} 
 		catch (IOException e) 
 		{
+			sen.connectionError = true;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 4");
@@ -242,6 +250,8 @@ public class InitialConnect extends Thread
 		}
 		catch (UnknownHostException e) 
 		{
+			sen.connectionError = true;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 5");
@@ -250,6 +260,8 @@ public class InitialConnect extends Thread
 		} 
 		catch (IOException e) 
 		{
+			sen.connectionError = true;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 6");
@@ -302,6 +314,8 @@ public class InitialConnect extends Thread
 		}
 		catch (UnknownHostException e) 
 		{
+			sen.connectionError = true;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 5");
@@ -310,6 +324,8 @@ public class InitialConnect extends Thread
 		} 
 		catch (IOException e) 
 		{
+			sen.connectionError = true;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 6");

@@ -186,8 +186,12 @@ public class Game extends Activity implements AccelerometerListener
     	y = y/accelRange;
     	
    	
-    	// Let object handle their own movement
-    	player.move(x, y);
+    	if(sen.movePlayer == true)
+    	{
+    	   	// Let object handle their own movement
+    		player.move(x, y);
+    	}
+
     	
     	if(sen.vibrate == true)
     	{
