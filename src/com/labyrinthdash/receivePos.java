@@ -121,7 +121,7 @@ class receivePos extends Thread
 		    int tempPosX2 = (surfaceWidth * tempPosX) / surfaceWidth2;
 		    int tempPosY2 = (surfaceHeight * tempPosY) / surfaceHeight2;
 		        
-		    //Log.d(TAG, "Translated (x,y): (" + tempPosX2 + "," + tempPosY2 + ")");
+		    Log.d(TAG, "Translated (x,y): (" + tempPosX2 + "," + tempPosY2 + ")");
 		      					 
 		    sen.receiveX = tempPosX2;
 		    sen.receiveY = tempPosY2;
@@ -131,7 +131,7 @@ class receivePos extends Thread
 		        
 			try
 			{
-				Thread.sleep(50);
+				Thread.sleep(5);
 			}
 			catch (Exception e)
 			{

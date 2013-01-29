@@ -316,5 +316,13 @@ public class InitialConnect extends Thread
 			
 			//TODO: exit
 		}
+		
+		while(sen.endThread == false)
+		{
+			
+		}
+		
+		socket4.close();
+		
 	}
 }

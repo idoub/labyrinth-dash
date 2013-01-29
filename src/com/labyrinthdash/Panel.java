@@ -352,23 +352,23 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							{
 								Log.d(TAG, "about to start connection");
 								
+								sen.endThread = false;
+								
+								multiPlayerChosen = true;
+								loadLevel = 0;
+								levelSelect = 1;
+								stage = 3;
+								previousStage = 2;
+								
 								// No choice in partner
 								new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
 								
-								
-								  	multiPlayerChosen = true;
-								 	loadLevel = 0;
-									levelSelect = 1;
-									stage = 5;
-									previousStage = 4;
-									Log.d(TAG, "Moving to stage 5");
-								 
-								
+								Log.d(TAG, "Moving to stage 5");
+																
 								Log.d(TAG, "connection process started");
 								
-								multiConnect = false;
+								//multiConnect = false;
 							}							
-							openMenu = true;
 						}
 					}
 				}
@@ -817,8 +817,19 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 			
 			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
 			
-			if(player.finshed) {
-				stage = 7;
+			if(player.finshed) 
+			{
+				
+				if(multiPlayerChosen == true)
+				{
+					sen.endThread = true;
+					
+					stage = 7;
+				}
+				else
+				{
+					stage = 7;
+				}
 			}
 		}		
 		
@@ -1160,6 +1171,15 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					asteroidX-=2;
 					asteroidY+=2;					
 				}
+				
+				if(stage == 4)
+				{
+					if(multiPlayerChosen == true)
+					{
+						previousStage = 4;
+						stage = 5;
+					}
+				}
 		
 				if(stage == 5)
 				{
@@ -1290,81 +1310,88 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 					else
 					{
-						Log.d(TAG, "Score: " + score + " before penalty");
-						
-						score += player.penalty;
-						
-						Log.d(TAG, "Score: " + score + " after penalty");						
-						
-						// Save player score to the device memory
-                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                      	SharedPreferences.Editor editor = app_preferences.edit();
-
-                      	// Give score
-                      	if(score < 15)
-                      	{
-                      		score = 3;
-                      	}
-                      	else if(score < 20)
-                      	{
-                      		score = 2;
-                      	}
-                      	else if(score < 25)
-                      	{
-                      		score = 1;
-                      	}
-                      	else
-                      	{
-                      		score = 0;
-                      	}
-                      	
-						// Save score
-						if(levelSelect == 1)
+						if(multiPlayerChosen == false)
 						{
-							if(score > score1)
+							Log.d(TAG, "Score: " + score + " before penalty");
+							
+							score += player.penalty;
+							
+							Log.d(TAG, "Score: " + score + " after penalty");						
+							
+							// Save player score to the device memory
+	                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+	                      	SharedPreferences.Editor editor = app_preferences.edit();
+	
+	                      	// Give score
+	                      	if(score < 15)
+	                      	{
+	                      		score = 3;
+	                      	}
+	                      	else if(score < 20)
+	                      	{
+	                      		score = 2;
+	                      	}
+	                      	else if(score < 25)
+	                      	{
+	                      		score = 1;
+	                      	}
+	                      	else
+	                      	{
+	                      		score = 0;
+	                      	}
+	                      	
+							// Save score
+							if(levelSelect == 1)
 							{
-								score1 = score;
-								editor.putInt("level1", score);
-		                      	editor.commit(); 
-							}    	
-						}
-						else if(levelSelect == 2)
-						{
-							if(score > score2)
+								if(score > score1)
+								{
+									score1 = score;
+									editor.putInt("level1", score);
+			                      	editor.commit(); 
+								}    	
+							}
+							else if(levelSelect == 2)
 							{
-								score2 = score;
-								editor.putInt("level2", score);
-		                      	editor.commit();  
-							} 
-						}
-						else if(levelSelect == 3)
-						{
-							if(score > score3)
+								if(score > score2)
+								{
+									score2 = score;
+									editor.putInt("level2", score);
+			                      	editor.commit();  
+								} 
+							}
+							else if(levelSelect == 3)
 							{
-								score3 = score;
-								editor.putInt("level3", score);
-		                      	editor.commit(); 
-							}  
-						}
-						else if(levelSelect == 4)
-						{
-							if(score > score4)
+								if(score > score3)
+								{
+									score3 = score;
+									editor.putInt("level3", score);
+			                      	editor.commit(); 
+								}  
+							}
+							else if(levelSelect == 4)
 							{
-								score4 = score;
-								editor.putInt("level4", score);
-		                      	editor.commit();						
-							}   
+								if(score > score4)
+								{
+									score4 = score;
+									editor.putInt("level4", score);
+			                      	editor.commit();						
+								}   
+							}
+							else
+							{
+								if(score > score5)
+								{
+									score5 = score;
+									editor.putInt("level5", score);
+			                      	editor.commit(); 	
+								}  
+							}
 						}
 						else
 						{
-							if(score > score5)
-							{
-								score5 = score;
-								editor.putInt("level5", score);
-		                      	editor.commit(); 	
-							}  
+							multiPlayerChosen = false;
+							
 						}
-						
 						previousX = 9999;
 						previousY = 9999;
 						stage = 4;
@@ -1402,4 +1429,6 @@ class sen
 	public static int receiveY = 0;
 	
 	public static boolean endThread = false;
+	
+	public static boolean endMulti = false;
 }
