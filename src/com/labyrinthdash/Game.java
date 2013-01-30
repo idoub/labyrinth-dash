@@ -10,12 +10,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.util.DisplayMetrics;
-=======
 import android.util.Log;
 import android.view.KeyEvent;
->>>>>>> 2186906a1409d28e85bf053c309ee66c78fc6b3a
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -198,8 +195,8 @@ public class Game extends Activity implements AccelerometerListener
     	x = -x/accelRange;	// x seems to be in reverse;
     	y = y/accelRange;
     	
-    	x = x/density;
-    	y = y/density;
+    	x = x*density;
+    	y = y*density;
    	
     	if(sen.movePlayer == true)
     	{
