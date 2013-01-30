@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -163,11 +164,15 @@ public class Game extends Activity implements AccelerometerListener
     //onAccelerationChanged callback
     public void onAccelerationChanged(float x, float y, float z) 
     {
+    	int density = getResources().getDisplayMetrics().densityDpi;
+    	density = density/DisplayMetrics.DENSITY_MEDIUM;
     	// Normalise the sensor values;
     	float accelRange = accelSensor.getMaximumRange();
     	x = -x/accelRange;	// x seems to be in reverse;
     	y = y/accelRange;
     	
+    	x = x/density;
+    	y = y/density;
    	
     	// Let object handle their own movement
     	player.move(x, y);
