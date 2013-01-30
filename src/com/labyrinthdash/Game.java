@@ -8,8 +8,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.util.DisplayMetrics;
+=======
+import android.util.Log;
+import android.view.KeyEvent;
+>>>>>>> 2186906a1409d28e85bf053c309ee66c78fc6b3a
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,6 +80,12 @@ public class Game extends Activity implements AccelerometerListener
         	Toast toast = Toast.makeText(CONTEXT, e.getMessage(), Toast.LENGTH_SHORT);
         	toast.show();
         }
+        
+        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+		if (wifi.isWifiEnabled())
+		{
+			sen.wifiEnabled = true;
+		}
         
         //Location        
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -145,22 +157,37 @@ public class Game extends Activity implements AccelerometerListener
  
     protected void onDestroy() 
     {
+    	//sen.endThread = true;
+    	   	
     	super.onDestroy();
     	
         if (AccelerometerManager.isListening()) 
         {
             AccelerometerManager.stopListening();
         }
-        
+    
         System.exit(0);
     }
+    
+    protected void onPause()
+	{
+    	//Log.d("PAUSE","Back pressed");
+    	
+		super.onPause();
+		
+        if (AccelerometerManager.isListening()) 
+        {
+            AccelerometerManager.stopListening();
+        }
+        
+        System.exit(0);
+	}
  
     public static Context getContext() 
     {
         return CONTEXT;
     }
- 
-    
+       
     //onAccelerationChanged callback
     public void onAccelerationChanged(float x, float y, float z) 
     {
@@ -174,8 +201,12 @@ public class Game extends Activity implements AccelerometerListener
     	x = x/density;
     	y = y/density;
    	
-    	// Let object handle their own movement
-    	player.move(x, y);
+    	if(sen.movePlayer == true)
+    	{
+    	   	// Let object handle their own movement
+    		player.move(x, y);
+    	}
+
     	
     	if(sen.vibrate == true)
     	{

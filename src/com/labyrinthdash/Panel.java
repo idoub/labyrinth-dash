@@ -13,10 +13,12 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -343,29 +345,41 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						if(openMenu == false)
 						{
 							sen.vibrate = true;
-							multiplayDialog.show();
+							//multiplayDialog.show();
 							
-							if(multiConnect == true)
+							//TODO
+							
+							if((multiConnect == true) && (sen.wifiEnabled == true))
 							{
+																
 								Log.d(TAG, "about to start connection");
 								
+								sen.endThread = false;
+								
+								sen.opponentWon = false;
+								sen.movePlayer = false;
+								sen.connectionError = false;
+								
+								multiPlayerChosen = true;
+								
+								loadLevel = 0;
+								levelSelect = 1;
+								stage = 3;
+								previousStage = 2;
+								
 								// No choice in partner
-								//new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
+								new InitialConnect(player, player, sen.surfaceHeight, sen.surfaceWidth, playerName).start();
 								
-								/*
-								 * 	multiPlayerChosen = true;
-								 	loadLevel = 0;
-									levelSelect = 1;
-									stage = 5;
-									previousStage = 4;
-									Log.d(TAG, "Moving to stage 5");
-								 */
-								
+								Log.d(TAG, "Moving to stage 5");
+																
 								Log.d(TAG, "connection process started");
 								
-								multiConnect = false;
-							}							
-							openMenu = true;
+								//multiConnect = false;
+							}
+							else
+							{
+								//TODO: SHOW MESSAGE
+							}
 						}
 					}
 				}
@@ -423,6 +437,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 1;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
@@ -437,6 +452,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 2;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
@@ -451,6 +467,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 3;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
@@ -465,6 +482,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 4;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}
@@ -479,6 +497,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 							levelSelect = 5;
 							stage = 5;
 							previousStage = 4;
+							sen.movePlayer = true;
 							Log.d(TAG, "Moving to stage 5");
 						}
 					}		
@@ -504,6 +523,10 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				{
 					stage = 7;
 					score = 100;
+					sen.movePlayer = true;
+					sen.endThread = true;
+					sen.receiveX = 0;
+					sen.receiveY = 0;
 					sen.vibrate = true;
 				}
 			}
@@ -544,20 +567,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	//@SuppressWarnings("deprecation")
-	public void onPause()
-	{
-		if (surfaceThread != null)
-		{
-			surfaceThread.finish();
-			surfaceThread = null;
-			//System.runFinalizersOnExit(true);
-		}
-		
-		System.exit(0);
-		
-		//super.onPause();
-		//onDestroy();
-	}
+	
 	
 	/*
 	 * Handles all displaying of graphics on the device screen
@@ -822,13 +832,40 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 		
 			if(multiPlayerChosen == true)
 			{
-				canvas.drawBitmap(player.img, sen.receiveX, sen.receiveY, myPaint);
+				canvas.drawBitmap(bmpStar1, sen.receiveX, sen.receiveY, myPaint);
 			}
 			
 			canvas.drawBitmap(bmpBackButtonLeft, 0, 0, myPaint);
 			
-			if(player.finshed) {
+			if((sen.connectionError == true) && (multiPlayerChosen == true))
+			{
+				sen.movePlayer = true;
+				sen.endThread = true;
+				sen.receiveX = 0;
+				sen.receiveY = 0;
+				
 				stage = 7;
+				
+				//TODO: SHOW MESSAGE
+			}
+			
+			
+			if(player.finshed) 
+			{
+				sen.movePlayer = true;
+				
+				if(multiPlayerChosen == true)
+				{
+					sen.endThread = true;
+					sen.receiveX = 0;
+					sen.receiveY = 0;
+					
+					stage = 7;
+				}
+				else
+				{
+					stage = 7;
+				}
 			}
 		}		
 		
@@ -976,13 +1013,17 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 	{
 		running = false;
 		
-		onPause();
+		surfaceThread.finish();
+		//appTask.isCancelled();
+		
+		//onPause();
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,	int height) 
 	{
 		// Deal with orientation change
 	}
+	
 
 	class appThread extends Thread
 	{
@@ -1166,6 +1207,15 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					asteroidX-=2;
 					asteroidY+=2;					
 				}
+				
+				if(stage == 4)
+				{
+					if(multiPlayerChosen == true)
+					{
+						previousStage = 4;
+						stage = 5;
+					}
+				}
 		
 				if(stage == 5)
 				{
@@ -1174,7 +1224,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					{
 						if(plevelButtonX >= ((sen.surfaceWidth/4)-(sen.surfaceWidth)))
 						{			
-							//TODO: "Level" button
 							plevelButtonX -= (sen.surfaceWidth/10);
 							plevelButtonX2 -= (sen.surfaceWidth/10);
 							pbackButtonX -= (sen.surfaceWidth/10);
@@ -1196,7 +1245,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 						}
 						if(levelSelect == 2)
 						{
-							map = new Map2();
+							map = new Map1();
 							player.reset();
 							player.mapReference = map;
 							player.position = map.startCell.position.add(map.startCell.width/2, map.startCell.height/2);
@@ -1289,6 +1338,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 				
 				if(stage == 7)
 				{					
+					sen.receiveX = 0;
+					sen.receiveY = 0;
+					
 					if(plevelButtonX < levelButtonX)
 					{			
 						plevelButtonX += (sen.surfaceWidth/10);
@@ -1297,81 +1349,88 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback
 					}
 					else
 					{
-						Log.d(TAG, "Score: " + score + " before penalty");
-						
-						score += player.penalty;
-						
-						Log.d(TAG, "Score: " + score + " after penalty");						
-						
-						// Save player score to the device memory
-                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                      	SharedPreferences.Editor editor = app_preferences.edit();
-
-                      	// Give score
-                      	if(score < 15)
-                      	{
-                      		score = 3;
-                      	}
-                      	else if(score < 20)
-                      	{
-                      		score = 2;
-                      	}
-                      	else if(score < 25)
-                      	{
-                      		score = 1;
-                      	}
-                      	else
-                      	{
-                      		score = 0;
-                      	}
-                      	
-						// Save score
-						if(levelSelect == 1)
+						if(multiPlayerChosen == false)
 						{
-							if(score > score1)
+							Log.d(TAG, "Score: " + score + " before penalty");
+							
+							score += player.penalty;
+							
+							Log.d(TAG, "Score: " + score + " after penalty");						
+							
+							// Save player score to the device memory
+	                      	SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+	                      	SharedPreferences.Editor editor = app_preferences.edit();
+	
+	                      	// Give score
+	                      	if(score < 15)
+	                      	{
+	                      		score = 3;
+	                      	}
+	                      	else if(score < 20)
+	                      	{
+	                      		score = 2;
+	                      	}
+	                      	else if(score < 25)
+	                      	{
+	                      		score = 1;
+	                      	}
+	                      	else
+	                      	{
+	                      		score = 0;
+	                      	}
+	                      	
+							// Save score
+							if(levelSelect == 1)
 							{
-								score1 = score;
-								editor.putInt("level1", score);
-		                      	editor.commit(); 
-							}    	
-						}
-						else if(levelSelect == 2)
-						{
-							if(score > score2)
+								if(score > score1)
+								{
+									score1 = score;
+									editor.putInt("level1", score);
+			                      	editor.commit(); 
+								}    	
+							}
+							else if(levelSelect == 2)
 							{
-								score2 = score;
-								editor.putInt("level2", score);
-		                      	editor.commit();  
-							} 
-						}
-						else if(levelSelect == 3)
-						{
-							if(score > score3)
+								if(score > score2)
+								{
+									score2 = score;
+									editor.putInt("level2", score);
+			                      	editor.commit();  
+								} 
+							}
+							else if(levelSelect == 3)
 							{
-								score3 = score;
-								editor.putInt("level3", score);
-		                      	editor.commit(); 
-							}  
-						}
-						else if(levelSelect == 4)
-						{
-							if(score > score4)
+								if(score > score3)
+								{
+									score3 = score;
+									editor.putInt("level3", score);
+			                      	editor.commit(); 
+								}  
+							}
+							else if(levelSelect == 4)
 							{
-								score4 = score;
-								editor.putInt("level4", score);
-		                      	editor.commit();						
-							}   
+								if(score > score4)
+								{
+									score4 = score;
+									editor.putInt("level4", score);
+			                      	editor.commit();						
+								}   
+							}
+							else
+							{
+								if(score > score5)
+								{
+									score5 = score;
+									editor.putInt("level5", score);
+			                      	editor.commit(); 	
+								}  
+							}
 						}
 						else
 						{
-							if(score > score5)
-							{
-								score5 = score;
-								editor.putInt("level5", score);
-		                      	editor.commit(); 	
-							}  
+							multiPlayerChosen = false;
+							
 						}
-						
 						previousX = 9999;
 						previousY = 9999;
 						stage = 4;
@@ -1408,5 +1467,9 @@ class sen
 	public static int receiveX = 0;
 	public static int receiveY = 0;
 	
-	public static boolean endThread = false;
+	public static boolean endThread = false;	
+	public static boolean opponentWon = false;
+	public static boolean movePlayer = false;
+	public static boolean connectionError = false;
+	public static boolean wifiEnabled = false;
 }

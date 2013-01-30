@@ -41,6 +41,8 @@ public class InitialConnect extends Thread
 	
 	DatagramSocket socket4 = null;
 	DatagramPacket packet;
+	
+	boolean noError = true;
 
 	byte[] buf;
 
@@ -74,7 +76,7 @@ public class InitialConnect extends Thread
 			Log.d(TAG, "About to try and connect");
 			
 			socket1 = null;
-			socket1 = new Socket("172.21.206.138", 22);
+			socket1 = new Socket("192.168.0.102", 7777);
 			
 		    if(socket1 == null)
 		    {
@@ -92,6 +94,9 @@ public class InitialConnect extends Thread
 	    } 
 		catch (UnknownHostException e) 
 		{
+			sen.connectionError = true;
+			noError = false;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 1");
@@ -100,6 +105,9 @@ public class InitialConnect extends Thread
 		} 
 		catch (IOException e) 
 		{
+			sen.connectionError = true;
+			noError = false;
+			
 			e.printStackTrace();
 			
 			Log.d("ERROR", "Error in connection 2");
@@ -107,214 +115,250 @@ public class InitialConnect extends Thread
 			//TODO: exit
 		}  		
 		
-		// Receive other players info from main server
-		try
-		{
-			socket2 = new ServerSocket(9999);
-			
-			socket1 = socket2.accept();
-			
-			Log.d(TAG, "Connection made");
-			
-			dataOutputStream = new DataOutputStream(socket1.getOutputStream());
-            dataInputStream = new DataInputStream(socket1.getInputStream());
-            
-            String message = dataInputStream.readUTF();
-            
-            Log.d(TAG, message + " device");
-            
-            if(message.equals("Master"))
-            {
-            	isMaster = true;
-            	
-            	slaveIP = dataInputStream.readUTF();
-            }
-            else
-            {
-            	isMaster = false;
-            	
-            	masterIP = dataInputStream.readUTF();
-            }           
-            
-            // Close sockets
-            socket2.close();
-            socket1.close();
-            dataInputStream.close();
-            dataOutputStream.close();
-            
-		}
-		catch (UnknownHostException e) 
-		{
-			e.printStackTrace();
-			
-			Log.d("ERROR", "Error in connection 3");
-			
-			//TODO: exit
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-			
-			Log.d("ERROR", "Error in connection 4");
-			
-			//TODO: exit
-		}
-		
-		
-		// Connect devices with TCP
-		try
-		{
-			if(isMaster == true)
+		if(noError == true)
+		{		
+			// Receive other players info from main server
+			try
 			{
-				Log.d(TAG, "Connect to slave IP: " + slaveIP);
-				
-				// Receive TCP connection from Master
-				socket2 = null;
-				socket2 = new ServerSocket(7777);
+				socket2 = new ServerSocket(9999);
 				
 				socket1 = socket2.accept();
 				
-				if(socket1 == null)
-				{
-					Log.d(TAG, "Error with TCP connection to slave");
-				}
-				else
-				{
-					Log.d(TAG, "TCP connection to slave created");
-				}
+				Log.d(TAG, "Connection made");
 				
-				// Create stream
-				dataOutputStream = new DataOutputStream(socket1.getOutputStream());
-	            dataInputStream = new DataInputStream(socket1.getInputStream());
-				
-				// Send Screen info
-				dataOutputStream.writeInt(surfaceWidth);
-				dataOutputStream.writeInt(surfaceHeight);
-				
-				// Receive screen info
-				surfaceWidth2 = dataInputStream.readInt();
-				surfaceHeight2 = dataInputStream.readInt();
-				
-				Log.d(TAG, "Enemy slave: (width, height): (" + surfaceWidth2 + ", " + surfaceHeight2 + ")");
-				
-				// Close streams and socket
-				socket2.close();
-				socket1.close();
-				dataInputStream.close();
-				dataOutputStream.close();
-			}
-			else
-			{
-				Log.d(TAG, "Connect to master IP: " + masterIP);
-								
-				// Make TCP connection to slave
-				socket1 = null;
-				socket1 = new Socket(masterIP, 7777);
-				
-				if(socket1 == null)
-				{
-					Log.d(TAG, "Error receiving TCP connection from master");
-				}
-				else
-				{
-					Log.d(TAG, "TCP connection to slave received");
-				}
-				// Create streams
 				dataOutputStream = new DataOutputStream(socket1.getOutputStream());
 	            dataInputStream = new DataInputStream(socket1.getInputStream());
 	            
-	            // Receive screen info
-				surfaceWidth2 = dataInputStream.readInt();
-				surfaceHeight2 = dataInputStream.readInt();
+	            String message = dataInputStream.readUTF();
 	            
-				// Send Screen info
-				dataOutputStream.writeInt(surfaceWidth);
-				dataOutputStream.writeInt(surfaceHeight);
-				
-				Log.d(TAG, "Enemy master: (width, height): (" + surfaceWidth2 + ", " + surfaceHeight2 + ")");	
-				
-				// Close streams and socket
-				socket2.close();
-				socket1.close();
-				dataInputStream.close();
-				dataOutputStream.close();
-			}   
-		}
-		catch (UnknownHostException e) 
-		{
-			e.printStackTrace();
-			
-			Log.d("ERROR", "Error in connection 5");
-			
-			//TODO: exit
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-			
-			Log.d("ERROR", "Error in connection 6");
-			
-			//TODO: exit
-		}
-		
-		
-		// Connect devices with UDP
-		try
-		{
-			if(isMaster == true)
-			{
-				Log.d(TAG, "About to set up Master UDP");
-				
-				socket4 = new DatagramSocket(4446);
-											
-				Log.d(TAG, "Master UDP socket created");
-											
-				packet = new DatagramPacket(buf, buf.length, InetAddress.getByName(slaveIP), 4446);
-				
-				Log.d(TAG, "Master UDP packet created");
-				
-				// Start communication threads
-				new sendPos(player1, socket4, packet, buf, true).start();
-				
-				new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
-				
-				Log.d(TAG, "Master send/receive threads started");
+	            Log.d(TAG, message + " device");
+	            
+	            if(message.equals("Master"))
+	            {
+	            	isMaster = true;
+	            	
+	            	slaveIP = dataInputStream.readUTF();
+	            }
+	            else
+	            {
+	            	isMaster = false;
+	            	
+	            	masterIP = dataInputStream.readUTF();
+	            }           
+	            
+	            // Close sockets
+	            socket2.close();
+	            socket1.close();
+	            dataInputStream.close();
+	            dataOutputStream.close();
+	            
 			}
-			else
+			catch (UnknownHostException e) 
 			{
-				Log.d(TAG, "About to set up Slave UDP");
+				sen.connectionError = true;
+				noError = false;
 				
-				socket4 = new DatagramSocket(4446);
-											
-				Log.d(TAG, "Slave UDP socket created");
-											
-				packet = new DatagramPacket(buf, buf.length, InetAddress.getByName(masterIP), 4446);
+				e.printStackTrace();
 				
-				Log.d(TAG, "Slave UDP packet created");
+				Log.d("ERROR", "Error in connection 3");
 				
-				// Start communication threads
-				new sendPos(player1, socket4, packet, buf, false).start();
+				//TODO: exit
+			} 
+			catch (IOException e) 
+			{
+				sen.connectionError = true;
+				noError = false;
 				
-				new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
+				e.printStackTrace();
 				
-				Log.d(TAG, "Slave send/receive threads started");
-			}			
+				Log.d("ERROR", "Error in connection 4");
+				
+				//TODO: exit
+			}
 		}
-		catch (UnknownHostException e) 
-		{
-			e.printStackTrace();
-			
-			Log.d("ERROR", "Error in connection 5");
-			
-			//TODO: exit
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-			
-			Log.d("ERROR", "Error in connection 6");
-			
-			//TODO: exit
+		
+		if(noError == true)
+		{		
+			// Connect devices with TCP
+			try
+			{
+				if(isMaster == true)
+				{
+					Log.d(TAG, "Connect to slave IP: " + slaveIP);
+					
+					// Receive TCP connection from Master
+					socket2 = null;
+					socket2 = new ServerSocket(4444);
+					
+					socket1 = socket2.accept();
+					
+					if(socket1 == null)
+					{
+						Log.d(TAG, "Error with TCP connection to slave");
+					}
+					else
+					{
+						Log.d(TAG, "TCP connection to slave created");
+					}
+					
+					// Create stream
+					dataOutputStream = new DataOutputStream(socket1.getOutputStream());
+		            dataInputStream = new DataInputStream(socket1.getInputStream());
+					
+					// Send Screen info
+					dataOutputStream.writeInt(surfaceWidth);
+					dataOutputStream.writeInt(surfaceHeight);
+					
+					// Receive screen info
+					surfaceWidth2 = dataInputStream.readInt();
+					surfaceHeight2 = dataInputStream.readInt();
+					
+					Log.d(TAG, "Enemy slave: (width, height): (" + surfaceWidth2 + ", " + surfaceHeight2 + ")");
+					
+					// Close streams and socket
+					socket2.close();
+					socket1.close();
+					dataInputStream.close();
+					dataOutputStream.close();
+				}
+				else
+				{
+					Log.d(TAG, "Connect to master IP: " + masterIP);
+									
+					// Make TCP connection to slave
+					socket1 = null;
+					socket1 = new Socket(masterIP, 4444);
+					
+					if(socket1 == null)
+					{
+						Log.d(TAG, "Error receiving TCP connection from master");
+					}
+					else
+					{
+						Log.d(TAG, "TCP connection to slave received");
+					}
+					// Create streams
+					dataOutputStream = new DataOutputStream(socket1.getOutputStream());
+		            dataInputStream = new DataInputStream(socket1.getInputStream());
+		            
+		            // Receive screen info
+					surfaceWidth2 = dataInputStream.readInt();
+					surfaceHeight2 = dataInputStream.readInt();
+		            
+					// Send Screen info
+					dataOutputStream.writeInt(surfaceWidth);
+					dataOutputStream.writeInt(surfaceHeight);
+					
+					Log.d(TAG, "Enemy master: (width, height): (" + surfaceWidth2 + ", " + surfaceHeight2 + ")");	
+					
+					// Close streams and socket
+					socket2.close();
+					socket1.close();
+					dataInputStream.close();
+					dataOutputStream.close();
+				}   
+			}
+			catch (UnknownHostException e) 
+			{
+				sen.connectionError = true;
+				noError = false;
+				
+				e.printStackTrace();
+				
+				Log.d("ERROR", "Error in connection 5");
+				
+				//TODO: exit
+			} 
+			catch (IOException e) 
+			{
+				sen.connectionError = true;
+				noError = false;
+				
+				e.printStackTrace();
+				
+				Log.d("ERROR", "Error in connection 6");
+				
+				//TODO: exit
+			}
+		}
+		
+		if(noError == true)
+		{		
+			// Connect devices with UDP
+			try
+			{
+				if(isMaster == true)
+				{
+					Log.d(TAG, "About to set up Master UDP");
+					
+					socket4 = new DatagramSocket(4446);
+												
+					Log.d(TAG, "Master UDP socket created");
+												
+					packet = new DatagramPacket(buf, buf.length, InetAddress.getByName(slaveIP), 4446);
+					
+					Log.d(TAG, "Master UDP packet created");
+					
+					// Start communication threads
+									
+					new sendPos(player1, socket4, packet, buf, true).start();
+					
+					new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
+					
+					Log.d(TAG, "Master send/receive threads started");
+				}
+				else
+				{
+					Log.d(TAG, "About to set up Slave UDP");
+					
+					socket4 = new DatagramSocket(4446);
+												
+					Log.d(TAG, "Slave UDP socket created");
+												
+					packet = new DatagramPacket(buf, buf.length, InetAddress.getByName(masterIP), 4446);
+					
+					Log.d(TAG, "Slave UDP packet created");
+					
+					// Start communication threads
+					new sendPos(player1, socket4, packet, buf, false).start();
+					
+					new receivePos(player2, socket4, packet, surfaceHeight, surfaceWidth, surfaceHeight2, surfaceWidth2, buf).start();
+					
+					Log.d(TAG, "Slave send/receive threads started");
+				}			
+			}
+			catch (UnknownHostException e) 
+			{
+				sen.connectionError = true;
+				noError = false;
+				
+				e.printStackTrace();
+				
+				Log.d("ERROR", "Error in connection 5");
+				
+				//TODO: exit
+			} 
+			catch (IOException e) 
+			{
+				sen.connectionError = true;
+				noError = false;
+				
+				e.printStackTrace();
+				
+				Log.d("ERROR", "Error in connection 6");
+				
+				//TODO: exit
+			}
+		}
+		
+		if(noError == true)
+		{		
+			while(sen.endThread == false)
+			{
+				
+			}
+		
+			socket4.close();
 		}
 	}
 }

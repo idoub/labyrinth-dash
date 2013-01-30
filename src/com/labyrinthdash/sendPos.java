@@ -79,15 +79,15 @@ class sendPos extends Thread
 			{
 				e.printStackTrace();
 			}
-		}
 			
-		try
-		{
-			Thread.sleep(50);
-		}
-		catch (Exception e)
-		{
-			Log.d(TAG, "Thread sleep fail sendPos");
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch (Exception e)
+			{
+				Log.d(TAG, "Thread sleep fail sendPos");
+			}
 		}
 	}
 		
